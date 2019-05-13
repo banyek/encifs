@@ -1,5 +1,6 @@
 # EnciFS - an Encrypted Filesystem
 
+(Actually just for fun & gift for all the Enikoes (called Enci)
 _Build Status_
  - Travis: [![Travis CI](https://travis-ci.org/vgough/encifs.svg?branch=master)](https://travis-ci.org/vgough/encifs)
 
