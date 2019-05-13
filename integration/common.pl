@@ -2,7 +2,7 @@
 # works on Linux AND OSX
 sub portable_unmount {
     my $crypt = shift;
-    qx(./build/encfs -u "$crypt" >/dev/null);
+    qx(./build/encifs -u "$crypt" >/dev/null);
 }
 
 # Helper function

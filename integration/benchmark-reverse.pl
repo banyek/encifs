@@ -1,24 +1,24 @@
 #!/usr/bin/perl
 
-# Benchmark EncFS reverse mode
+# Benchmark EnciFS reverse mode
 
 use File::Temp;
 use warnings;
 
 require("integration/common.pl");
 
-sub mount_encfs_reverse {
+sub mount_encifs_reverse {
     my $p = shift;
     my $c = shift;
     my $opts = shift;
 
-    my $cmdline = "./build/encfs --extpass=\"echo test\" --standard $p $c --reverse $opts 2>&1 > /dev/null";
-    # print "mounting encfs: $cmdline\n";
+    my $cmdline = "./build/encifs --extpass=\"echo test\" --standard $p $c --reverse $opts 2>&1 > /dev/null";
+    # print "mounting encifs: $cmdline\n";
     my $status = system($cmdline);
     if ( $status != 0 ) { die("command returned error: $status"); }
-    waitForFile("$p/.encfs6.xml") or die("Control file not created");
+    waitForFile("$p/.encifs6.xml") or die("Control file not created");
 
-    # print "encfs --reverse mounted on $c\n";
+    # print "encifs --reverse mounted on $c\n";
 }
 
 sub cleanup {
@@ -37,7 +37,7 @@ sub cleanup {
 sub main {
 
   my $prefix     = shift(@ARGV) or die("Missing DIR argument");
-  my $workingDir = mkdtemp("$prefix/encfs-performance-XXXX")
+  my $workingDir = mkdtemp("$prefix/encifs-performance-XXXX")
       || die("Could not create temporary directory");
 
   my $c = "$workingDir/c";
@@ -55,7 +55,7 @@ sub main {
   our $linuxgz;
   system("tar xzf $linuxgz -C $p");
 
-  mount_encfs_reverse($p, $c, $opts);
+  mount_encifs_reverse($p, $c, $opts);
 
   my @results = ();
   stopwatch_start("rsync 1 (initial copy)");

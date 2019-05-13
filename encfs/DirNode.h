@@ -37,10 +37,10 @@
 #include "FileNode.h"
 #include "NameIO.h"
 
-namespace encfs {
+namespace encifs {
 
 class Cipher;
-class EncFS_Context;
+class EnciFS_Context;
 class FileNode;
 class NameIO;
 class RenameOp;
@@ -81,7 +81,7 @@ inline bool DirTraverse::valid() const { return dir.get() != 0; }
 class DirNode {
  public:
   // sourceDir points to where raw files are stored
-  DirNode(EncFS_Context *ctx, const std::string &sourceDir,
+  DirNode(EnciFS_Context *ctx, const std::string &sourceDir,
           const FSConfigPtr &config);
   ~DirNode();
 
@@ -165,7 +165,7 @@ class DirNode {
 
   pthread_mutex_t mutex;
 
-  EncFS_Context *ctx;
+  EnciFS_Context *ctx;
 
   // passed in as configuration
   std::string rootDir;
@@ -174,6 +174,6 @@ class DirNode {
   std::shared_ptr<NameIO> naming;
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

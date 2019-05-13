@@ -23,7 +23,7 @@
 
 #include <pthread.h>
 
-namespace encfs {
+namespace encifs {
 
 class Lock {
  public:
@@ -51,6 +51,6 @@ inline Lock::~Lock() {
 
 inline void Lock::leave() { _mutex = 0; }
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

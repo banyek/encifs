@@ -36,7 +36,7 @@
 
 using namespace std;
 
-namespace encfs {
+namespace encifs {
 
 static Interface RawFileIO_iface("FileIO/Raw", 1, 0, 0);
 
@@ -88,7 +88,7 @@ Interface RawFileIO::interface() const { return RawFileIO_iface; }
     with calls to lstat picking up the wrong permissions.
 
     This works around the problem described in
-   https://github.com/vgough/encfs/issues/181
+   https://github.com/vgough/encifs/issues/181
     Without this, "umask 0777 ; echo foo > bar" fails.
 
     Sets errno when -1 is returned.
@@ -305,4 +305,4 @@ int RawFileIO::truncate(off_t size) {
 
 bool RawFileIO::isWritable() const { return canWrite; }
 
-}  // namespace encfs
+}  // namespace encifs

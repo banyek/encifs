@@ -32,13 +32,13 @@
 #include "CipherKey.h"
 #include "FSConfig.h"
 #include "FileUtils.h"
-#include "encfs.h"
+#include "encifs.h"
 
 #define CANARY_OK 0x46040975
 #define CANARY_RELEASED 0x70c5610d
 #define CANARY_DESTROYED 0x52cdad90
 
-namespace encfs {
+namespace encifs {
 
 class Cipher;
 class DirNode;
@@ -109,6 +109,6 @@ class FileNode {
   FileNode &operator=(const FileNode &src);
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

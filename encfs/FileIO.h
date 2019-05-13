@@ -26,9 +26,9 @@
 #include <sys/types.h>
 
 #include "Interface.h"
-#include "encfs.h"
+#include "encifs.h"
 
-namespace encfs {
+namespace encifs {
 
 struct IORequest {
   off_t offset;
@@ -80,6 +80,6 @@ class FileIO {
   FileIO &operator=(const FileIO &);
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

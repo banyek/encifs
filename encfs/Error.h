@@ -13,7 +13,7 @@
 #define EBADMSG EINVAL
 #endif
 
-namespace encfs {
+namespace encifs {
 
 class Error : public std::runtime_error {
  public:
@@ -26,7 +26,7 @@ class Error : public std::runtime_error {
   do {                                               \
     if ((cond) == false) {                           \
       RLOG(ERROR) << "Assert failed: " << STR(cond); \
-      throw encfs::Error(STR(cond));                 \
+      throw encifs::Error(STR(cond));                 \
     }                                                \
   } while (false)
 
@@ -39,6 +39,6 @@ extern el::base::DispatchAction rlogAction;
 #define RLOG(LEVEL, ...) \
   C##LEVEL(el::base::Writer, rlogAction, ELPP_CURR_FILE_LOGGER_ID)
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

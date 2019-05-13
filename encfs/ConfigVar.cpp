@@ -25,7 +25,7 @@
 
 #include "Error.h"
 
-namespace encfs {
+namespace encifs {
 
 #ifndef MIN
 inline int MIN(int a, int b) { return (a < b) ? a : b; }
@@ -206,4 +206,4 @@ const ConfigVar &operator>>(const ConfigVar &src, std::string &result) {
   return src;
 }
 
-}  // namespace encfs
+}  // namespace encifs

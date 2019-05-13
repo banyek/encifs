@@ -1,13 +1,13 @@
-# Ukrainian translation for encfs
+# Ukrainian translation for encifs
 # Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
-# This file is distributed under the same license as the encfs package.
+# This file is distributed under the same license as the encifs package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: encfs\n"
-"Report-Msgid-Bugs-To: https://translations.launchpad.net/encfs/main/+pots/"
-"encfs\n"
+"Project-Id-Version: encifs\n"
+"Report-Msgid-Bugs-To: https://translations.launchpad.net/encifs/main/+pots/"
+"encifs\n"
 "POT-Creation-Date: 2015-03-29 18:22+0200\n"
 "PO-Revision-Date: 2009-10-08 23:19+0000\n"
 "Last-Translator: atany <Unknown>\n"
@@ -67,20 +67,20 @@ msgid ""
 "  --extpass=program\tUse external program for password prompt\n"
 "\n"
 "Example, to mount at ~/crypt with raw storage in ~/.crypt :\n"
-"    encfs ~/.crypt ~/crypt\n"
+"    encifs ~/.crypt ~/crypt\n"
 "\n"
 msgstr ""
 
 msgid ""
 "  --public\t\tact as a typical multi-user filesystem\n"
-"\t\t\t(encfs must be run as root)\n"
+"\t\t\t(encifs must be run as root)\n"
 msgstr ""
 
 msgid "  --reverse\t\treverse encryption\n"
 msgstr ""
 
 msgid ""
-"  -v, --verbose\t\tverbose: output encfs debug messages\n"
+"  -v, --verbose\t\tverbose: output encifs debug messages\n"
 "  -i, --idle=MINUTES\tAuto unmount after period of inactivity\n"
 "  --anykey\t\tDo not verify correct key is being used\n"
 "  --forcedecode\t\tdecode data even if an error is detected\n"
@@ -122,11 +122,11 @@ msgid "-------------------------- WARNING --------------------------\n"
 msgstr "-------------------------- УВАГА --------------------------\n"
 
 msgid ""
-"A really old EncFS filesystem was found. \n"
-"It is not supported in this EncFS build.\n"
+"A really old EnciFS filesystem was found. \n"
+"It is not supported in this EnciFS build.\n"
 msgstr ""
-"Знайдена стара файлова система EncFS. \n"
-"Вона не підтримується цією версією EncFS.\n"
+"Знайдена стара файлова система EnciFS. \n"
+"Вона не підтримується цією версією EnciFS.\n"
 
 msgid ""
 "Add random bytes to each block header?\n"
@@ -157,8 +157,8 @@ msgid "Block Size: %i bytes, including %i byte MAC header"
 msgstr "Розмір блоку: %i байт, включаючи %i байт MAC заголовку"
 
 #, c-format
-msgid "Build: encfs version %s"
-msgstr "Зборка: encfs версії %s"
+msgid "Build: encifs version %s"
+msgstr "Зборка: encifs версії %s"
 
 msgid ""
 "Common Options:\n"
@@ -171,10 +171,10 @@ msgstr ""
 
 #, c-format
 msgid ""
-"Config subversion %i found, but this version of encfs only supports up to "
+"Config subversion %i found, but this version of encifs only supports up to "
 "version %i."
 msgstr ""
-"Конфігураційне порушення %i знайдено, але версія encfs підтримує тільки до %i"
+"Конфігураційне порушення %i знайдено, але версія encifs підтримує тільки до %i"
 
 msgid ""
 "Configuration finished.  The filesystem to be created has\n"
@@ -215,7 +215,7 @@ msgid ""
 "Enable filename to IV header chaining?\n"
 "This makes file data encoding dependent on the complete file path.\n"
 "If a file is renamed, it will not decode sucessfully unless it\n"
-"was renamed by encfs with the proper key.\n"
+"was renamed by encifs with the proper key.\n"
 "If this option is enabled, then hard links will not be supported\n"
 "in the filesystem."
 msgstr ""
@@ -227,14 +227,14 @@ msgid ""
 "which rely on block-aligned file io for performance."
 msgstr ""
 
-msgid "EncFS Password: "
-msgstr "Пароль EncFS: "
+msgid "EnciFS Password: "
+msgstr "Пароль EnciFS: "
 
-msgid "Enter current Encfs password\n"
-msgstr "Введіть Ваш Encfs пароль\n"
+msgid "Enter current Encifs password\n"
+msgstr "Введіть Ваш Encifs пароль\n"
 
-msgid "Enter new Encfs password\n"
-msgstr "Введіть новий Encfs пароль\n"
+msgid "Enter new Encifs password\n"
+msgstr "Введіть новий Encifs пароль\n"
 
 msgid "Enter the number corresponding to your choice: "
 msgstr "Введіть номер. котрий є Вашим вибором: "
@@ -286,8 +286,8 @@ msgstr "Файлові імена зашифровані з використан
 msgid "Filesystem cipher: \"%s\", version %i:%i:%i"
 msgstr "Шифр файлової системи: \"%s\", версія %i:%i:%i"
 
-msgid "For more information, see the man page encfs(1)"
-msgstr "Для додаткової інформації зверніться до довідки encfs(1)"
+msgid "For more information, see the man page encifs(1)"
+msgstr "Для додаткової інформації зверніться до довідки encifs(1)"
 
 #, c-format
 msgid "Found %i invalid file."
@@ -356,8 +356,8 @@ msgstr "При використанні монтування через демо
 msgid "Name coding interface not supported"
 msgstr "Ім'я кодового інтерфейсу не підтримується"
 
-msgid "New Encfs Password: "
-msgstr "Новий пароль Encfs: "
+msgid "New Encifs Password: "
+msgstr "Новий пароль Encifs: "
 
 msgid ""
 "Note: requested single-threaded mode, but an idle\n"
@@ -374,13 +374,13 @@ msgid ""
 "Now you will need to enter a password for your filesystem.\n"
 "You will need to remember this password, as there is absolutely\n"
 "no recovery mechanism.  However, the password can be changed\n"
-"later using encfsctl.\n"
+"later using encifsctl.\n"
 "\n"
 msgstr ""
 "Зараз ви маєте ввести пароль для вашої файлової системи.\n"
 "Ви повинні запам'ятати цей пароль, тому, що ви більше не\n"
 "будете мати змоги відновити його. У будь якому випадку\n"
-"пароль може бути змінений пізніше за допомогою encfsctl.\n"
+"пароль може бути змінений пізніше за допомогою encifsctl.\n"
 "\n"
 
 #, fuzzy
@@ -466,7 +466,7 @@ msgid ""
 "enabled.  This option disables the use of hard links on the\n"
 "filesystem. Without hard links, some programs may not work.\n"
 "The programs 'mutt' and 'procmail' are known to fail.  For\n"
-"more information, please see the encfs mailing list.\n"
+"more information, please see the encifs mailing list.\n"
 "If you would like to choose another configuration setting,\n"
 "please press CTRL-C now to abort and start over."
 msgstr ""
@@ -474,7 +474,7 @@ msgstr ""
 "Ця опція забороняє використання жорстких посилань до файлової системи.\n"
 "Без жорстких посилань деякі програми не будуть працювати.\n"
 "Також не будуть працювати такі програми, як 'mutt' та 'procmail'.\n"
-"Для більш детальної інформації читайте списки розсилань encfs.\n"
+"Для більш детальної інформації читайте списки розсилань encifs.\n"
 "Якщо ви бажаєте обрати інші налаштування конфігурації\n"
 "будь-ласка натисність CTRL+C і розпочніть спочатку."
 
@@ -497,9 +497,9 @@ msgid "The requested filename coding interface is not available\n"
 msgstr "Даний інтерфейс кодування файлового імені не доступний\n"
 
 msgid ""
-"This version of EncFS doesn't support filesystems created before 2004-08-13"
+"This version of EnciFS doesn't support filesystems created before 2004-08-13"
 msgstr ""
-"Дана версія EncFS не підтримує файлові системи, що були створені до "
+"Дана версія EnciFS не підтримує файлові системи, що були створені до "
 "2004-08-13"
 
 msgid "Unable to create directory: "
@@ -559,8 +559,8 @@ msgstr "Використовується розмір блоку файлово�
 msgid "Using key size of %i bits"
 msgstr "Використання ключа. розмір якого %i біт(а)"
 
-msgid "Verify Encfs Password: "
-msgstr "Підтвердіть пароль EncFS: "
+msgid "Verify Encifs Password: "
+msgstr "Підтвердіть пароль EnciFS: "
 
 #, c-format
 msgid "Version 3 configuration; created by %s\n"
@@ -598,19 +598,19 @@ msgid "directory %s does not exist.\n"
 msgstr "директорія %s не існує\n"
 
 msgid ""
-"encfs [options] rootDir mountPoint -- [FUSE Mount Options]\n"
+"encifs [options] rootDir mountPoint -- [FUSE Mount Options]\n"
 "valid FUSE Mount Options follow:\n"
 msgstr ""
-"encfs [options] rootDir mountPoint -- [FUSE Mount Options]\n"
+"encifs [options] rootDir mountPoint -- [FUSE Mount Options]\n"
 "Доступні наступн опції монтування:\n"
 
 #, c-format
-msgid "encfs version %s"
+msgid "encifs version %s"
 msgstr ""
 
 #, c-format
-msgid "encfsctl version %s"
-msgstr "версія  \tencfsctl %s"
+msgid "encifsctl version %s"
+msgstr "версія  \tencifsctl %s"
 
 msgid "filesystem block size: "
 msgstr "розмір блоку файлової системи: "

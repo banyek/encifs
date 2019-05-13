@@ -42,7 +42,7 @@
 
 using namespace std;
 
-namespace encfs {
+namespace encifs {
 
 const int MAX_KEYLENGTH = 32;  // in bytes (256 bit)
 const int MAX_IVLENGTH = 16;   // 128 bit (AES block size, Blowfish has 64)
@@ -934,4 +934,4 @@ bool SSL_Cipher::blockDecode(unsigned char *buf, int size, uint64_t iv64,
 
 bool SSL_Cipher::Enabled() { return true; }
 
-}  // namespace encfs
+}  // namespace encifs

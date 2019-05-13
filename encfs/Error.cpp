@@ -2,7 +2,7 @@
 
 INITIALIZE_EASYLOGGINGPP
 
-namespace encfs {
+namespace encifs {
 
 el::base::DispatchAction rlogAction = el::base::DispatchAction::NormalLog;
 
@@ -17,7 +17,7 @@ void initLogging(bool enable_debug, bool is_daemon) {
   std::string suffix = " [%fbase:%line]";
   if (is_daemon) {
     prefix = "";
-    encfs::rlogAction = el::base::DispatchAction::SysLog;
+    encifs::rlogAction = el::base::DispatchAction::SysLog;
   } else {
     el::Loggers::addFlag(el::LoggingFlag::ColoredTerminalOutput);
   }
@@ -32,4 +32,4 @@ void initLogging(bool enable_debug, bool is_daemon) {
   el::Loggers::reconfigureLogger("default", defaultConf);
 }
 
-}  // namespace encfs
+}  // namespace encifs

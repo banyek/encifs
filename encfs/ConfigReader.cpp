@@ -31,7 +31,7 @@
 
 using namespace std;
 
-namespace encfs {
+namespace encifs {
 
 ConfigReader::ConfigReader() = default;
 
@@ -141,4 +141,4 @@ ConfigVar &ConfigReader::operator[](const std::string &varName) {
   return vars[varName];
 }
 
-}  // namespace encfs
+}  // namespace encifs

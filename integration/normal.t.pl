@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Test EncFS normal and paranoid mode
+# Test EnciFS normal and paranoid mode
 
 use Test::More tests => 136;
 use File::Path;
@@ -20,24 +20,24 @@ if($^O eq "linux" and $tempDir eq "/tmp") {
 
 # Find attr binary
 # Linux
-my $setattr = "attr -s encfs -V hello";
-my $getattr = "attr -g encfs";
+my $setattr = "attr -s encifs -V hello";
+my $getattr = "attr -g encifs";
 if(system("which xattr > /dev/null 2>&1") == 0)
 {
     # Mac OS X
-    $setattr = "xattr -sw encfs hello";
-    $getattr = "xattr -sp encfs";
+    $setattr = "xattr -sw encifs hello";
+    $getattr = "xattr -sp encifs";
 }
 if(system("which lsextattr > /dev/null 2>&1") == 0)
 {
     # FreeBSD
-    $setattr = "setextattr -h user encfs hello";
-    $getattr = "getextattr -h user encfs";
+    $setattr = "setextattr -h user encifs hello";
+    $getattr = "getextattr -h user encifs";
 }
 
 # Do we support xattr ?
 my $have_xattr = 1;
-if(system("./build/encfs --verbose --version 2>&1 | grep -q HAVE_XATTR") != 0)
+if(system("./build/encifs --verbose --version 2>&1 | grep -q HAVE_XATTR") != 0)
 {
     $have_xattr = 0;
 }
@@ -102,7 +102,7 @@ sub runTests
 # Create a new empty working directory
 sub newWorkingDir
 {
-    our $workingDir = mkdtemp("$tempDir/encfs-tests-XXXX")
+    our $workingDir = mkdtemp("$tempDir/encifs-tests-XXXX")
         || BAIL_OUT("Could not create temporary directory");
 
     our $raw = "$workingDir/raw";
@@ -240,10 +240,10 @@ sub truncate
 # Test file creation and removal
 sub fileCreation
 {
-    # first be sure .encfs6.xml does not show up
-    my $f = encName(".encfs6.xml");
+    # first be sure .encifs6.xml does not show up
+    my $f = encName(".encifs6.xml");
     cmp_ok( length($f), '>', 8, "encrypted name ok" );
-    ok( ! -f "$raw/$f", "configuration file .encfs6.xml not visible in $raw" );
+    ok( ! -f "$raw/$f", "configuration file .encifs6.xml not visible in $raw" );
 
     # create a file
     qx(date > "$crypt/df.txt");
@@ -319,7 +319,7 @@ sub checkContents
 sub encName
 {
     my $plain = shift;
-    my $enc = qx(./build/encfsctl encode --extpass="echo test" $raw $plain);
+    my $enc = qx(./build/encifsctl encode --extpass="echo test" $raw $plain);
     chomp($enc);
     return $enc;
 }
@@ -373,10 +373,10 @@ sub mount
         mkdir($crypt)  || BAIL_OUT("Could not create $crypt: $!");
     }
 
-    delete $ENV{"ENCFS6_CONFIG"};
+    delete $ENV{"ENCIFS6_CONFIG"};
     remount($args);
-    ok( $? == 0, "encfs command returns 0") || BAIL_OUT("");
-    ok( -f "$raw/.encfs6.xml",  "created control file") || BAIL_OUT("");
+    ok( $? == 0, "encifs command returns 0") || BAIL_OUT("");
+    ok( -f "$raw/.encifs6.xml",  "created control file") || BAIL_OUT("");
 }
 
 # Helper function
@@ -384,7 +384,7 @@ sub mount
 sub remount
 {
     my $args = shift;
-    my $cmdline = "./build/encfs --extpass=\"echo test\" $args $raw $crypt 2>&1";
+    my $cmdline = "./build/encifs --extpass=\"echo test\" $args $raw $crypt 2>&1";
     #                                  This makes sure we get to see stderr ^
     system($cmdline);
 }
@@ -403,7 +403,7 @@ sub cleanup
 }
 
 # Test that we can create and write to a a file even if umask is set to 0777
-# Regression test for bug https://github.com/vgough/encfs/issues/181
+# Regression test for bug https://github.com/vgough/encifs/issues/181
 sub umask0777
 {
     my $old = umask(0777);
@@ -413,20 +413,20 @@ sub umask0777
 }
 
 # Test that we can read the configuration from a named pipe
-# Regression test for https://github.com/vgough/encfs/issues/253
+# Regression test for https://github.com/vgough/encifs/issues/253
 sub configFromPipe
 {
     portable_unmount($crypt);
-    rename("$raw/.encfs6.xml", "$raw/.encfs6.xml.orig");
-    system("mkfifo $raw/.encfs6.xml");
+    rename("$raw/.encifs6.xml", "$raw/.encifs6.xml.orig");
+    system("mkfifo $raw/.encifs6.xml");
     my $child = fork();
     unless ($child) {
         &remount("--standard");
         exit;
     }
-    system("cat $raw/.encfs6.xml.orig > $raw/.encfs6.xml");
+    system("cat $raw/.encifs6.xml.orig > $raw/.encifs6.xml");
     waitpid($child, 0);
-    ok( 0 == $?, "encfs mount with named pipe based config failed");
+    ok( 0 == $?, "encifs mount with named pipe based config failed");
 }
 
 sub create_unmount_remount
@@ -443,9 +443,9 @@ sub create_unmount_remount
         mkdir($mnt)  || BAIL_OUT($!);
     }
 
-    system("./build/encfs --standard --extpass=\"echo test\" $crypt $mnt 2>&1");
-    ok( $? == 0, "encfs command returns 0") || return;
-    ok( -f "$crypt/.encfs6.xml",  "created control file") || return;
+    system("./build/encifs --standard --extpass=\"echo test\" $crypt $mnt 2>&1");
+    ok( $? == 0, "encifs command returns 0") || return;
+    ok( -f "$crypt/.encifs6.xml",  "created control file") || return;
 
     # Write some text
     my $contents = "hello world\n";
@@ -457,9 +457,9 @@ sub create_unmount_remount
     portable_unmount($mnt);
 
     # Mount again, testing -c at the same time
-    rename("$crypt/.encfs6.xml", "$crypt/.encfs6_moved.xml");
-    system("./build/encfs -c $crypt/.encfs6_moved.xml --extpass=\"echo test\" $crypt $mnt 2>&1");
-    ok( $? == 0, "encfs command returns 0") || return;
+    rename("$crypt/.encifs6.xml", "$crypt/.encifs6_moved.xml");
+    system("./build/encifs -c $crypt/.encifs6_moved.xml --extpass=\"echo test\" $crypt $mnt 2>&1");
+    ok( $? == 0, "encifs command returns 0") || return;
 
     # Check if content is still there
     checkContents("$mnt/test_file_1", $contents);
@@ -498,8 +498,8 @@ sub checkWriteError
             }
             system("$sudo_cmd mount -t tmpfs -o size=1m tmpfs $crypt");
             ok( $? == 0, "mount command returns 0") || return;
-            system("./build/encfs --standard --extpass=\"echo test\" $crypt $mnt 2>&1");
-            ok( $? == 0, "encfs command returns 0") || return;
+            system("./build/encifs --standard --extpass=\"echo test\" $crypt $mnt 2>&1");
+            ok( $? == 0, "encifs command returns 0") || return;
             ok(open(OUT , "> $mnt/file"), "write content");
             while(print OUT "0123456789") {}
             ok ($!{ENOSPC}, "write returned $! instead of ENOSPC");

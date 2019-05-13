@@ -31,7 +31,7 @@
 #include "CipherKey.h"
 #include "Interface.h"
 
-namespace encfs {
+namespace encifs {
 
 class Cipher;
 
@@ -141,6 +141,6 @@ class NameIO {
     }                         \
   } while (false);
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

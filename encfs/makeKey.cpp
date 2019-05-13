@@ -29,7 +29,7 @@
 #include "openssl.h"
 
 using namespace std;
-using namespace encfs;
+using namespace encifs;
 
 void genKey(const std::shared_ptr<Cipher> &cipher) {
   CipherKey key = cipher->newRandomKey();

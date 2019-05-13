@@ -41,7 +41,7 @@
 
 using namespace std;
 
-namespace encfs {
+namespace encifs {
 
 /*
    TODO: locking at the FileNode level is inefficient, since this precludes
@@ -293,4 +293,4 @@ int FileNode::sync(bool datasync) {
   return fh;
 }
 
-}  // namespace encfs
+}  // namespace encifs

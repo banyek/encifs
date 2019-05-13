@@ -21,7 +21,7 @@
 #ifndef _Range_incl_
 #define _Range_incl_
 
-namespace encfs {
+namespace encifs {
 
 class Range {
   int minVal;
@@ -88,6 +88,6 @@ inline int Range::max() const { return maxVal; }
 
 inline int Range::inc() const { return increment; }
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

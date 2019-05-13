@@ -26,7 +26,7 @@
 #include "Interface.h"
 #include "NameIO.h"
 
-namespace encfs {
+namespace encifs {
 
 class NullNameIO : public NameIO {
  public:
@@ -53,6 +53,6 @@ class NullNameIO : public NameIO {
  private:
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

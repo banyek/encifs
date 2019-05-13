@@ -36,7 +36,7 @@
 #include "Error.h"
 #include "FileIO.h"
 
-namespace encfs {
+namespace encifs {
 
 /*
     - Version 2:0 adds support for a per-file initialization vector with a
@@ -573,4 +573,4 @@ ssize_t CipherFileIO::read(const IORequest &origReq) const {
 
 bool CipherFileIO::isWritable() const { return base->isWritable(); }
 
-}  // namespace encfs
+}  // namespace encifs

@@ -24,7 +24,7 @@
 #include <memory>
 #include <string>
 
-namespace encfs {
+namespace encifs {
 
 class ConfigVar {
   struct ConfigVarData {
@@ -77,6 +77,6 @@ const ConfigVar &operator>>(const ConfigVar &, bool &);
 const ConfigVar &operator>>(const ConfigVar &, int &);
 const ConfigVar &operator>>(const ConfigVar &, std::string &str);
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

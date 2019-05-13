@@ -27,7 +27,7 @@
 #include "CipherKey.h"
 #include "Interface.h"
 
-namespace encfs {
+namespace encifs {
 
 /*
     Implements Cipher interface for a pass-through mode.  May be useful for
@@ -82,6 +82,6 @@ class NullCipher : public Cipher {
   static bool Enabled();
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

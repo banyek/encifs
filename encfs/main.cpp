@@ -41,7 +41,7 @@
 #include "MemoryPool.h"
 #include "autosprintf.h"
 #include "config.h"
-#include "encfs.h"
+#include "encifs.h"
 #include "fuse.h"
 #include "i18n.h"
 #include "openssl.h"
@@ -56,10 +56,10 @@
 #define LONG_OPT_INSECURE 518
 
 using namespace std;
-using namespace encfs;
+using namespace encifs;
 using gnu::autosprintf;
 
-namespace encfs {
+namespace encifs {
 
 class DirNode;
 
@@ -67,12 +67,12 @@ class DirNode;
 // affect how many arguments we can handle, just how many we can pass on..
 const int MaxFuseArgs = 32;
 /**
- * EncFS_Args stores the parsed command-line arguments
+ * EnciFS_Args stores the parsed command-line arguments
  *
- * See also: struct EncFS_Opts (FileUtils.h), stores internal settings that are
+ * See also: struct EnciFS_Opts (FileUtils.h), stores internal settings that are
  * derived from the arguments
  */
-struct EncFS_Args {
+struct EnciFS_Args {
   bool isDaemon;    // true == spawn in background, log to syslog
   bool isThreaded;  // true == threaded
   bool isVerbose;   // false == only enable warning/error messages
@@ -81,7 +81,7 @@ struct EncFS_Args {
   int fuseArgc;
   std::string syslogTag;  // syslog tag to use when logging using syslog
 
-  std::shared_ptr<EncFS_Opts> opts;
+  std::shared_ptr<EnciFS_Opts> opts;
 
   // for debugging
   // In case someone sends me a log dump, I want to know how what options are
@@ -124,16 +124,16 @@ struct EncFS_Args {
     return ss.str();
   }
 
-  EncFS_Args() : opts(new EncFS_Opts()) {}
+  EnciFS_Args() : opts(new EnciFS_Opts()) {}
 };
 
 static int oldStderr = STDERR_FILENO;
 
-}  // namespace encfs
+}  // namespace encifs
 
 static void usage(const char *name) {
   // xgroup(usage)
-  cerr << autosprintf(_("Build: encfs version %s"), VERSION) << "\n\n"
+  cerr << autosprintf(_("Build: encifs version %s"), VERSION) << "\n\n"
        // xgroup(usage)
        << autosprintf(
               _("Usage: %s [options] rootDir mountPoint [-- [FUSE Mount "
@@ -153,7 +153,7 @@ static void usage(const char *name) {
 
        // xgroup(usage)
        << _("  -v, --verbose\t\t"
-            "verbose: output encfs debug messages\n"
+            "verbose: output encifs debug messages\n"
             "  -i, --idle=MINUTES\t"
             "Auto unmount after period of inactivity\n"
             "  --anykey\t\t"
@@ -163,7 +163,7 @@ static void usage(const char *name) {
             "\t\t\t(for filesystems using MAC block headers)\n")
        << _("  --public\t\t"
             "act as a typical multi-user filesystem\n"
-            "\t\t\t(encfs must be run as root)\n")
+            "\t\t\t(encifs must be run as root)\n")
        << _("  --reverse\t\t"
             "reverse encryption\n")
        << _("  --reversewrite\t\t"
@@ -177,16 +177,16 @@ static void usage(const char *name) {
        << _("  --extpass=program\tUse external program for password prompt\n"
             "\n"
             "Example, to mount at ~/crypt with raw storage in ~/.crypt :\n"
-            "    encfs ~/.crypt ~/crypt\n"
+            "    encifs ~/.crypt ~/crypt\n"
             "\n")
        // xgroup(usage)
-       << _("For more information, see the man page encfs(1)") << "\n"
+       << _("For more information, see the man page encifs(1)") << "\n"
        << endl;
 }
 
 static void FuseUsage() {
   // xgroup(usage)
-  cerr << _("encfs [options] rootDir mountPoint -- [FUSE Mount Options]\n"
+  cerr << _("encifs [options] rootDir mountPoint -- [FUSE Mount Options]\n"
             "valid FUSE Mount Options follow:\n")
        << endl;
 
@@ -211,14 +211,14 @@ static string slashTerminate(const string &src) {
 }
 
 static bool processArgs(int argc, char *argv[],
-                        const std::shared_ptr<EncFS_Args> &out) {
+                        const std::shared_ptr<EnciFS_Args> &out) {
   // set defaults
   out->isDaemon = true;
   out->isThreaded = true;
   out->isVerbose = false;
   out->idleTimeout = 0;
   out->fuseArgc = 0;
-  out->syslogTag = "encfs";
+  out->syslogTag = "encifs";
   out->opts->idleTracking = false;
   out->opts->checkKey = true;
   out->opts->forceDecode = false;
@@ -357,7 +357,7 @@ static bool processArgs(int argc, char *argv[],
          * is disabled (expert mode) */
         out->opts->readOnly = true;
         /* By default, the kernel caches file metadata for one second.
-         * This is fine for EncFS' normal mode, but for --reverse, this
+         * This is fine for EnciFS' normal mode, but for --reverse, this
          * means that the encrypted view will be up to one second out of
          * date.
          * Quoting Goswin von Brederlow:
@@ -378,7 +378,7 @@ static bool processArgs(int argc, char *argv[],
         out->opts->readOnly = false;
         break;
       case LONG_OPT_NOCACHE:
-        /* Disable EncFS block cache
+        /* Disable EnciFS block cache
          * Causes reverse grow tests to fail because short reads
          * are returned */
         out->opts->noCache = true;
@@ -434,7 +434,7 @@ static bool processArgs(int argc, char *argv[],
         break;
       case 'V':
         // xgroup(usage)
-        cerr << autosprintf(_("encfs version %s"), VERSION) << endl;
+        cerr << autosprintf(_("encifs version %s"), VERSION) << endl;
 #if defined(HAVE_XATTR)
         // "--verbose" has to be passed before "--version" for this to work.
         if (out->isVerbose) {
@@ -513,8 +513,8 @@ static bool processArgs(int argc, char *argv[],
     // sense if "allow_other"" is used.
     // But it works around the issues "open_readonly_workaround" causes,
     // so enable it unconditionally.
-    // See https://github.com/vgough/encfs/issues/181 and
-    // https://github.com/vgough/encfs/issues/112 for more info.
+    // See https://github.com/vgough/encifs/issues/181 and
+    // https://github.com/vgough/encifs/issues/112 for more info.
     PUSHARG("-o");
     PUSHARG("default_permissions");
 
@@ -615,8 +615,8 @@ static bool processArgs(int argc, char *argv[],
 
 static void *idleMonitor(void *);
 
-void *encfs_init(fuse_conn_info *conn) {
-  auto *ctx = (EncFS_Context *)fuse_get_context()->private_data;
+void *encifs_init(fuse_conn_info *conn) {
+  auto *ctx = (EnciFS_Context *)fuse_get_context()->private_data;
 
   // set fuse connection options
   conn->async_read = 1u;
@@ -662,83 +662,83 @@ int main(int argc, char *argv[]) {
 
   // anything that comes from the user should be considered tainted until
   // we've processed it and only allowed through what we support.
-  std::shared_ptr<EncFS_Args> encfsArgs(new EncFS_Args);
+  std::shared_ptr<EnciFS_Args> encifsArgs(new EnciFS_Args);
   for (int i = 0; i < MaxFuseArgs; ++i) {
-    encfsArgs->fuseArgv[i] = nullptr;  // libfuse expects null args..
+    encifsArgs->fuseArgv[i] = nullptr;  // libfuse expects null args..
   }
 
-  if (argc == 1 || !processArgs(argc, argv, encfsArgs)) {
+  if (argc == 1 || !processArgs(argc, argv, encifsArgs)) {
     usage(argv[0]);
     return EXIT_FAILURE;
   }
 
-  encfs::initLogging(encfsArgs->isVerbose, encfsArgs->isDaemon);
-  ELPP_INITIALIZE_SYSLOG(encfsArgs->syslogTag.c_str(), LOG_PID, LOG_USER);
+  encifs::initLogging(encifsArgs->isVerbose, encifsArgs->isDaemon);
+  ELPP_INITIALIZE_SYSLOG(encifsArgs->syslogTag.c_str(), LOG_PID, LOG_USER);
 
   // Let's unmount if requested
-  if (encfsArgs->opts->unmount) {
+  if (encifsArgs->opts->unmount) {
     // We use cout here to avoid logging to stderr (and to mess-up tests output)
-    cout << "Filesystem unmounting: " << encfsArgs->opts->unmountPoint << endl;
-    unmountFS(encfsArgs->opts->unmountPoint.c_str());
+    cout << "Filesystem unmounting: " << encifsArgs->opts->unmountPoint << endl;
+    unmountFS(encifsArgs->opts->unmountPoint.c_str());
     return 0;
   }
 
-  VLOG(1) << "Root directory: " << encfsArgs->opts->rootDir;
-  VLOG(1) << "Fuse arguments: " << encfsArgs->toString();
+  VLOG(1) << "Root directory: " << encifsArgs->opts->rootDir;
+  VLOG(1) << "Fuse arguments: " << encifsArgs->toString();
 
-  fuse_operations encfs_oper;
+  fuse_operations encifs_oper;
   // in case this code is compiled against a newer FUSE library and new
   // members have been added to fuse_operations, make sure they get set to
   // 0..
-  memset(&encfs_oper, 0, sizeof(fuse_operations));
+  memset(&encifs_oper, 0, sizeof(fuse_operations));
 
-  encfs_oper.getattr = encfs_getattr;
-  encfs_oper.readlink = encfs_readlink;
-  encfs_oper.readdir = encfs_readdir;
-  encfs_oper.mknod = encfs_mknod;
-  encfs_oper.mkdir = encfs_mkdir;
-  encfs_oper.unlink = encfs_unlink;
-  encfs_oper.rmdir = encfs_rmdir;
-  encfs_oper.symlink = encfs_symlink;
-  encfs_oper.rename = encfs_rename;
-  encfs_oper.link = encfs_link;
-  encfs_oper.chmod = encfs_chmod;
-  encfs_oper.chown = encfs_chown;
-  encfs_oper.truncate = encfs_truncate;
-  encfs_oper.utime = encfs_utime;  // deprecated for utimens
-  encfs_oper.open = encfs_open;
-  encfs_oper.read = encfs_read;
-  encfs_oper.write = encfs_write;
-  encfs_oper.statfs = encfs_statfs;
-  encfs_oper.flush = encfs_flush;
-  encfs_oper.release = encfs_release;
-  encfs_oper.fsync = encfs_fsync;
+  encifs_oper.getattr = encifs_getattr;
+  encifs_oper.readlink = encifs_readlink;
+  encifs_oper.readdir = encifs_readdir;
+  encifs_oper.mknod = encifs_mknod;
+  encifs_oper.mkdir = encifs_mkdir;
+  encifs_oper.unlink = encifs_unlink;
+  encifs_oper.rmdir = encifs_rmdir;
+  encifs_oper.symlink = encifs_symlink;
+  encifs_oper.rename = encifs_rename;
+  encifs_oper.link = encifs_link;
+  encifs_oper.chmod = encifs_chmod;
+  encifs_oper.chown = encifs_chown;
+  encifs_oper.truncate = encifs_truncate;
+  encifs_oper.utime = encifs_utime;  // deprecated for utimens
+  encifs_oper.open = encifs_open;
+  encifs_oper.read = encifs_read;
+  encifs_oper.write = encifs_write;
+  encifs_oper.statfs = encifs_statfs;
+  encifs_oper.flush = encifs_flush;
+  encifs_oper.release = encifs_release;
+  encifs_oper.fsync = encifs_fsync;
 #ifdef HAVE_XATTR
-  encfs_oper.setxattr = encfs_setxattr;
-  encfs_oper.getxattr = encfs_getxattr;
-  encfs_oper.listxattr = encfs_listxattr;
-  encfs_oper.removexattr = encfs_removexattr;
+  encifs_oper.setxattr = encifs_setxattr;
+  encifs_oper.getxattr = encifs_getxattr;
+  encifs_oper.listxattr = encifs_listxattr;
+  encifs_oper.removexattr = encifs_removexattr;
 #endif  // HAVE_XATTR
-  // encfs_oper.opendir = encfs_opendir;
-  // encfs_oper.readdir = encfs_readdir;
-  // encfs_oper.releasedir = encfs_releasedir;
-  // encfs_oper.fsyncdir = encfs_fsyncdir;
-  encfs_oper.init = encfs_init;
-  // encfs_oper.access = encfs_access;
-  encfs_oper.create = encfs_create;
-  encfs_oper.ftruncate = encfs_ftruncate;
-  encfs_oper.fgetattr = encfs_fgetattr;
-  // encfs_oper.lock = encfs_lock;
-  encfs_oper.utimens = encfs_utimens;
-  // encfs_oper.bmap = encfs_bmap;
+  // encifs_oper.opendir = encifs_opendir;
+  // encifs_oper.readdir = encifs_readdir;
+  // encifs_oper.releasedir = encifs_releasedir;
+  // encifs_oper.fsyncdir = encifs_fsyncdir;
+  encifs_oper.init = encifs_init;
+  // encifs_oper.access = encifs_access;
+  encifs_oper.create = encifs_create;
+  encifs_oper.ftruncate = encifs_ftruncate;
+  encifs_oper.fgetattr = encifs_fgetattr;
+  // encifs_oper.lock = encifs_lock;
+  encifs_oper.utimens = encifs_utimens;
+  // encifs_oper.bmap = encifs_bmap;
 
-  openssl_init(encfsArgs->isThreaded);
+  openssl_init(encifsArgs->isThreaded);
 
   // context is not a smart pointer because it will live for the life of
   // the filesystem.
-  auto ctx = std::make_shared<EncFS_Context>();
-  ctx->publicFilesystem = encfsArgs->opts->ownerCreate;
-  RootPtr rootInfo = initFS(ctx.get(), encfsArgs->opts);
+  auto ctx = std::make_shared<EnciFS_Context>();
+  ctx->publicFilesystem = encifsArgs->opts->ownerCreate;
+  RootPtr rootInfo = initFS(ctx.get(), encifsArgs->opts);
 
   int returnCode = EXIT_FAILURE;
 
@@ -746,14 +746,14 @@ int main(int argc, char *argv[]) {
     // turn off delayMount, as our prior call to initFS has already
     // respected any delay, and we want future calls to actually
     // mount.
-    encfsArgs->opts->delayMount = false;
+    encifsArgs->opts->delayMount = false;
 
     // set the globally visible root directory node
     ctx->setRoot(rootInfo->root);
-    ctx->args = encfsArgs;
-    ctx->opts = encfsArgs->opts;
+    ctx->args = encifsArgs;
+    ctx->opts = encifsArgs->opts;
 
-    if (!encfsArgs->isThreaded && encfsArgs->idleTimeout > 0) {
+    if (!encifsArgs->isThreaded && encifsArgs->idleTimeout > 0) {
       // xgroup(usage)
       cerr << _("Note: requested single-threaded mode, but an idle\n"
                 "timeout was specified.  The filesystem will operate\n"
@@ -766,7 +766,7 @@ int main(int argc, char *argv[]) {
     // pass-thru calls..
     umask(0);
 
-    if (encfsArgs->isDaemon) {
+    if (encifsArgs->isDaemon) {
       // keep around a pointer just in case we end up needing it to
       // report a fatal condition later (fuse_main exits unexpectedly)...
       oldStderr = dup(STDERR_FILENO);
@@ -775,7 +775,7 @@ int main(int argc, char *argv[]) {
     try {
       time_t startTime, endTime;
 
-      if (encfsArgs->opts->annotate) {
+      if (encifsArgs->opts->annotate) {
         cerr << "$STATUS$ fuse_main_start" << endl;
       }
 
@@ -785,13 +785,13 @@ int main(int argc, char *argv[]) {
       time(&startTime);
 
       // fuse_main returns an error code in newer versions of fuse..
-      int res = fuse_main(encfsArgs->fuseArgc,
-                          const_cast<char **>(encfsArgs->fuseArgv), &encfs_oper,
+      int res = fuse_main(encifsArgs->fuseArgc,
+                          const_cast<char **>(encifsArgs->fuseArgv), &encifs_oper,
                           (void *)ctx.get());
 
       time(&endTime);
 
-      if (encfsArgs->opts->annotate) {
+      if (encifsArgs->opts->annotate) {
         cerr << "$STATUS$ fuse_main_end" << endl;
       }
 
@@ -799,7 +799,7 @@ int main(int argc, char *argv[]) {
         returnCode = EXIT_SUCCESS;
       }
 
-      if (res != 0 && encfsArgs->isDaemon && (oldStderr >= 0) &&
+      if (res != 0 && encifsArgs->isDaemon && (oldStderr >= 0) &&
           (endTime - startTime <= 1)) {
         // the users will not have seen any message from fuse, so say a
         // few words in libfuse's memory..
@@ -836,7 +836,7 @@ int main(int argc, char *argv[]) {
   ctx->setRoot(std::shared_ptr<DirNode>());
 
   MemoryPool::destroyAll();
-  openssl_shutdown(encfsArgs->isThreaded);
+  openssl_shutdown(encifsArgs->isThreaded);
 
   return returnCode;
 }
@@ -851,8 +851,8 @@ int main(int argc, char *argv[]) {
 const int ActivityCheckInterval = 10;
 
 static void *idleMonitor(void *_arg) {
-  auto *ctx = (EncFS_Context *)_arg;
-  std::shared_ptr<EncFS_Args> arg = ctx->args;
+  auto *ctx = (EnciFS_Context *)_arg;
+  std::shared_ptr<EnciFS_Args> arg = ctx->args;
 
   const int timeoutCycles = 60 * arg->idleTimeout / ActivityCheckInterval;
 

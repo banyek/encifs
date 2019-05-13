@@ -26,7 +26,7 @@
 
 #include "Interface.h"
 
-namespace encfs {
+namespace encifs {
 
 class XmlValue;
 using XmlValuePtr = std::shared_ptr<XmlValue>;
@@ -72,6 +72,6 @@ class XmlReader {
   std::shared_ptr<XmlReaderData> pd;
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

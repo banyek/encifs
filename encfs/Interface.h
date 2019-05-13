@@ -23,7 +23,7 @@
 
 #include <string>
 
-namespace encfs {
+namespace encifs {
 
 class ConfigVar;
 
@@ -76,6 +76,6 @@ bool operator>=(const Interface &A, const Interface &B);
 bool operator==(const Interface &A, const Interface &B);
 bool operator!=(const Interface &A, const Interface &B);
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

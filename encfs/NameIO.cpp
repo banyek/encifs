@@ -40,7 +40,7 @@ using namespace std;
 #define REF_MODULE(TYPE) \
   if (!TYPE::Enabled()) cerr << "referenceModule: should never happen\n";
 
-namespace encfs {
+namespace encifs {
 
 static void AddSymbolReferences() {
   REF_MODULE(BlockNameIO)
@@ -299,4 +299,4 @@ int NameIO::decodeName( const char *path, int length,
 }
 */
 
-}  // namespace encfs
+}  // namespace encifs

@@ -70,7 +70,7 @@
 using namespace std;
 using gnu::autosprintf;
 
-namespace encfs {
+namespace encifs {
 
 static const int DefaultBlockSize = 1024;
 // The maximum length of text passwords.  If longer are needed,
@@ -80,11 +80,11 @@ static const int MaxPassBuf = 512;
 static const int NormalKDFDuration = 500;     // 1/2 a second
 static const int ParanoiaKDFDuration = 3000;  // 3 seconds
 
-// environment variable names for values encfs stores in the environment when
+// environment variable names for values encifs stores in the environment when
 // calling an external password program.
-static const char ENCFS_ENV_ROOTDIR[] = "encfs_root";
-static const char ENCFS_ENV_STDOUT[] = "encfs_stdout";
-static const char ENCFS_ENV_STDERR[] = "encfs_stderr";
+static const char ENCIFS_ENV_ROOTDIR[] = "encifs_root";
+static const char ENCIFS_ENV_STDOUT[] = "encifs_stdout";
+static const char ENCIFS_ENV_STDERR[] = "encifs_stderr";
 
 // static int V5SubVersion = 20040518;
 // static int V5SubVersion = 20040621; // add external IV chaining
@@ -105,27 +105,27 @@ struct ConfigInfo {
   const char *fileName;
   ConfigType type;
   const char *environmentOverride;
-  bool (*loadFunc)(const char *fileName, EncFSConfig *config, ConfigInfo *cfg);
-  bool (*saveFunc)(const char *fileName, const EncFSConfig *config);
+  bool (*loadFunc)(const char *fileName, EnciFSConfig *config, ConfigInfo *cfg);
+  bool (*saveFunc)(const char *fileName, const EnciFSConfig *config);
   int currentSubVersion;
   int defaultSubVersion;
 } ConfigFileMapping[] = {
     // current format
-    {".encfs6.xml", Config_V6, "ENCFS6_CONFIG", readV6Config, writeV6Config,
+    {".encifs6.xml", Config_V6, "ENCIFS6_CONFIG", readV6Config, writeV6Config,
      V6SubVersion, 0},
     // backward compatible support for older versions
-    {".encfs5", Config_V5, "ENCFS5_CONFIG", readV5Config, writeV5Config,
+    {".encifs5", Config_V5, "ENCIFS5_CONFIG", readV5Config, writeV5Config,
      V5SubVersion, V5SubVersionDefault},
-    {".encfs4", Config_V4, nullptr, readV4Config, writeV4Config, 0, 0},
+    {".encifs4", Config_V4, nullptr, readV4Config, writeV4Config, 0, 0},
     // no longer support earlier versions
-    {".encfs3", Config_V3, nullptr, nullptr, nullptr, 0, 0},
-    {".encfs2", Config_Prehistoric, nullptr, nullptr, nullptr, 0, 0},
-    {".encfs", Config_Prehistoric, nullptr, nullptr, nullptr, 0, 0},
+    {".encifs3", Config_V3, nullptr, nullptr, nullptr, 0, 0},
+    {".encifs2", Config_Prehistoric, nullptr, nullptr, nullptr, 0, 0},
+    {".encifs", Config_Prehistoric, nullptr, nullptr, nullptr, 0, 0},
     {nullptr, Config_None, nullptr, nullptr, nullptr, 0, 0}};
 
-EncFS_Root::EncFS_Root() = default;
+EnciFS_Root::EnciFS_Root() = default;
 
-EncFS_Root::~EncFS_Root() = default;
+EnciFS_Root::~EnciFS_Root() = default;
 
 bool fileExists(const char *fileName) {
   struct stat buf;
@@ -201,14 +201,14 @@ bool userAllowMkdir(int promptno, const char *path, mode_t mode) {
  * Load config file by calling the load function on the filename
  */
 ConfigType readConfig_load(ConfigInfo *nm, const char *path,
-                           EncFSConfig *config) {
+                           EnciFSConfig *config) {
   if (nm->loadFunc != nullptr) {
     try {
       if ((*nm->loadFunc)(path, config, nm)) {
         config->cfgType = nm->type;
         return nm->type;
       }
-    } catch (encfs::Error &err) {
+    } catch (encifs::Error &err) {
       RLOG(ERROR) << "readConfig error: " << err.what();
     }
 
@@ -226,7 +226,7 @@ ConfigType readConfig_load(ConfigInfo *nm, const char *path,
  * Try to locate the config file
  * Tries the most recent format first, then looks for older versions
  */
-ConfigType readConfig(const string &rootDir, EncFSConfig *config, const string &cmdConfig) {
+ConfigType readConfig(const string &rootDir, EnciFSConfig *config, const string &cmdConfig) {
   ConfigInfo *nm = ConfigFileMapping;
   while (nm->fileName != nullptr) {
    // allow command line argument to override default config path 
@@ -264,11 +264,11 @@ ConfigType readConfig(const string &rootDir, EncFSConfig *config, const string &
 }
 
 /**
- * Read config file in current "V6" XML format, normally named ".encfs6.xml"
+ * Read config file in current "V6" XML format, normally named ".encifs6.xml"
  * This format is in use since Apr 13, 2008 (commit 6d081f5c)
  */
 // Read a boost::serialization config file using an Xml reader..
-bool readV6Config(const char *configFile, EncFSConfig *cfg, ConfigInfo *info) {
+bool readV6Config(const char *configFile, EnciFSConfig *cfg, ConfigInfo *info) {
   (void)info;
 
   XmlReader rdr;
@@ -353,10 +353,10 @@ bool readV6Config(const char *configFile, EncFSConfig *cfg, ConfigInfo *info) {
 }
 
 /**
- * Read config file in deprecated "V5" format, normally named ".encfs5"
+ * Read config file in deprecated "V5" format, normally named ".encifs5"
  * This format has been used before Apr 13, 2008
  */
-bool readV5Config(const char *configFile, EncFSConfig *config,
+bool readV5Config(const char *configFile, EnciFSConfig *config,
                   ConfigInfo *info) {
   bool ok = false;
 
@@ -375,7 +375,7 @@ bool readV5Config(const char *configFile, EncFSConfig *config,
         return false;
       }
       if (config->subVersion < 20040813) {
-        RLOG(ERROR) << "This version of EncFS doesn't support "
+        RLOG(ERROR) << "This version of EnciFS doesn't support "
                        "filesystems created before 2004-08-13";
         return false;
       }
@@ -396,7 +396,7 @@ bool readV5Config(const char *configFile, EncFSConfig *config,
       config->blockMACRandBytes = cfgRdr["blockMACRandBytes"].readInt(0);
 
       ok = true;
-    } catch (encfs::Error &err) {
+    } catch (encifs::Error &err) {
       RLOG(WARNING) << err.what();
       VLOG(1) << "Error parsing data in config file " << configFile;
       ok = false;
@@ -407,10 +407,10 @@ bool readV5Config(const char *configFile, EncFSConfig *config,
 }
 
 /**
- * Read config file in deprecated "V4" format, normally named ".encfs4"
+ * Read config file in deprecated "V4" format, normally named ".encifs4"
  * This format has been used before Jan 7, 2008
  */
-bool readV4Config(const char *configFile, EncFSConfig *config,
+bool readV4Config(const char *configFile, EnciFSConfig *config,
                   ConfigInfo *info) {
   bool ok = false;
 
@@ -427,7 +427,7 @@ bool readV4Config(const char *configFile, EncFSConfig *config,
 
       // fill in default for V4
       config->nameIface = Interface("nameio/stream", 1, 0, 0);
-      config->creator = "EncFS 1.0.x";
+      config->creator = "EnciFS 1.0.x";
       config->subVersion = info->defaultSubVersion;
       config->blockMACBytes = 0;
       config->blockMACRandBytes = 0;
@@ -436,7 +436,7 @@ bool readV4Config(const char *configFile, EncFSConfig *config,
       config->chainedNameIV = false;
 
       ok = true;
-    } catch (encfs::Error &err) {
+    } catch (encifs::Error &err) {
       RLOG(WARNING) << err.what();
       VLOG(1) << "Error parsing config file " << configFile;
       ok = false;
@@ -447,7 +447,7 @@ bool readV4Config(const char *configFile, EncFSConfig *config,
 }
 
 bool saveConfig(ConfigType type, const string &rootDir,
-                const EncFSConfig *config, const string &cmdConfig) {
+                const EnciFSConfig *config, const string &cmdConfig) {
   bool ok = false;
 
   ConfigInfo *nm = ConfigFileMapping;
@@ -468,7 +468,7 @@ bool saveConfig(ConfigType type, const string &rootDir,
 
       try {
         ok = (*nm->saveFunc)(path.c_str(), config);
-      } catch (encfs::Error &err) {
+      } catch (encifs::Error &err) {
         RLOG(WARNING) << err.what();
         ok = false;
       }
@@ -520,7 +520,7 @@ tinyxml2::XMLElement *addEl<>(tinyxml2::XMLDocument &doc,
   return addEl(doc, parent, name, v.c_str());
 }
 
-bool writeV6Config(const char *configFile, const EncFSConfig *cfg) {
+bool writeV6Config(const char *configFile, const EnciFSConfig *cfg) {
   tinyxml2::XMLDocument doc;
 
   // Various static tags are included to make the output compatible with
@@ -566,7 +566,7 @@ bool writeV6Config(const char *configFile, const EncFSConfig *cfg) {
   return err == tinyxml2::XML_SUCCESS;
 }
 
-bool writeV5Config(const char *configFile, const EncFSConfig *config) {
+bool writeV5Config(const char *configFile, const EnciFSConfig *config) {
   ConfigReader cfg;
 
   cfg["creator"] << config->creator;
@@ -587,7 +587,7 @@ bool writeV5Config(const char *configFile, const EncFSConfig *config) {
   return cfg.save(configFile);
 }
 
-bool writeV4Config(const char *configFile, const EncFSConfig *config) {
+bool writeV4Config(const char *configFile, const EnciFSConfig *config) {
   ConfigReader cfg;
 
   cfg["cipher"] << config->cipherIface;
@@ -977,7 +977,7 @@ static bool selectExternalChainedIV() {
       _("Enable filename to IV header chaining?\n"
         "This makes file data encoding dependent on the complete file path.\n"
         "If a file is renamed, it will not decode sucessfully unless it\n"
-        "was renamed by encfs with the proper key.\n"
+        "was renamed by encifs with the proper key.\n"
         "If this option is enabled, then hard links will not be supported\n"
         "in the filesystem."));
 }
@@ -992,8 +992,8 @@ static bool selectZeroBlockPassThrough() {
         "This avoids writing encrypted blocks when file holes are created."));
 }
 
-RootPtr createV6Config(EncFS_Context *ctx,
-                       const std::shared_ptr<EncFS_Opts> &opts) {
+RootPtr createV6Config(EnciFS_Context *ctx,
+                       const std::shared_ptr<EnciFS_Opts> &opts) {
   const std::string rootDir = opts->rootDir;
   bool enableIdleTracking = opts->idleTracking;
   bool forceDecode = opts->forceDecode;
@@ -1166,7 +1166,7 @@ RootPtr createV6Config(EncFS_Context *ctx,
   VLOG(1) << "Using cipher " << alg.name << ", key size " << keySize
           << ", block size " << blockSize;
 
-  std::shared_ptr<EncFSConfig> config(new EncFSConfig);
+  std::shared_ptr<EnciFSConfig> config(new EnciFSConfig);
 
   config->cfgType = Config_V6;
   config->cipherIface = cipher->interface();
@@ -1174,7 +1174,7 @@ RootPtr createV6Config(EncFS_Context *ctx,
   config->blockSize = blockSize;
   config->plainData = plainData;
   config->nameIface = nameIOIface;
-  config->creator = "EncFS " VERSION;
+  config->creator = "EnciFS " VERSION;
   config->subVersion = V6SubVersion;
   config->blockMACBytes = blockMACBytes;
   config->blockMACRandBytes = blockMACRandBytes;
@@ -1200,7 +1200,7 @@ RootPtr createV6Config(EncFS_Context *ctx,
               "enabled.  This option disables the use of hard links on the\n"
               "filesystem. Without hard links, some programs may not work.\n"
               "The programs 'mutt' and 'procmail' are known to fail.  For\n"
-              "more information, please see the encfs mailing list.\n"
+              "more information, please see the encifs mailing list.\n"
               "If you would like to choose another configuration setting,\n"
               "please press CTRL-C now to abort and start over.")
          << endl;
@@ -1212,7 +1212,7 @@ RootPtr createV6Config(EncFS_Context *ctx,
       "Now you will need to enter a password for your filesystem.\n"
       "You will need to remember this password, as there is absolutely\n"
       "no recovery mechanism.  However, the password can be changed\n"
-      "later using encfsctl.\n\n");
+      "later using encifsctl.\n\n");
 
   int encodedKeySize = cipher->encodedKeySize();
   auto *encodedKey = new unsigned char[encodedKeySize];
@@ -1280,7 +1280,7 @@ RootPtr createV6Config(EncFS_Context *ctx,
   fsConfig->idleTracking = enableIdleTracking;
   fsConfig->opts = opts;
 
-  rootInfo = std::make_shared<encfs::EncFS_Root>();
+  rootInfo = std::make_shared<encifs::EnciFS_Root>();
   rootInfo->cipher = cipher;
   rootInfo->volumeKey = volumeKey;
   rootInfo->root = std::make_shared<DirNode>(ctx, rootDir, fsConfig);
@@ -1288,7 +1288,7 @@ RootPtr createV6Config(EncFS_Context *ctx,
   return rootInfo;
 }
 
-void showFSInfo(const EncFSConfig *config) {
+void showFSInfo(const EnciFSConfig *config) {
   std::shared_ptr<Cipher> cipher = Cipher::New(config->cipherIface, -1);
   {
     cout << autosprintf(
@@ -1393,31 +1393,31 @@ void showFSInfo(const EncFSConfig *config) {
   }
   cout << "\n";
 }
-std::shared_ptr<Cipher> EncFSConfig::getCipher() const {
+std::shared_ptr<Cipher> EnciFSConfig::getCipher() const {
   return Cipher::New(cipherIface, keySize);
 }
 
-void EncFSConfig::assignKeyData(const std::string &in) {
+void EnciFSConfig::assignKeyData(const std::string &in) {
   keyData.assign(in.data(), in.data() + in.length());
 }
 
-void EncFSConfig::assignKeyData(unsigned char *data, int len) {
+void EnciFSConfig::assignKeyData(unsigned char *data, int len) {
   keyData.assign(data, data + len);
 }
 
-void EncFSConfig::assignSaltData(unsigned char *data, int len) {
+void EnciFSConfig::assignSaltData(unsigned char *data, int len) {
   salt.assign(data, data + len);
 }
 
-unsigned char *EncFSConfig::getKeyData() const {
+unsigned char *EnciFSConfig::getKeyData() const {
   return const_cast<unsigned char *>(&keyData.front());
 }
 
-unsigned char *EncFSConfig::getSaltData() const {
+unsigned char *EnciFSConfig::getSaltData() const {
   return const_cast<unsigned char *>(&salt.front());
 }
 
-CipherKey EncFSConfig::makeKey(const char *password, int passwdLen) {
+CipherKey EnciFSConfig::makeKey(const char *password, int passwdLen) {
   CipherKey userKey;
   std::shared_ptr<Cipher> cipher = getCipher();
 
@@ -1451,7 +1451,7 @@ CipherKey EncFSConfig::makeKey(const char *password, int passwdLen) {
   return userKey;
 }
 
-CipherKey EncFSConfig::getUserKey(bool useStdin) {
+CipherKey EnciFSConfig::getUserKey(bool useStdin) {
   char passBuf[MaxPassBuf];
   char *res;
 
@@ -1463,7 +1463,7 @@ CipherKey EncFSConfig::getUserKey(bool useStdin) {
     }
   } else {
     // xgroup(common)
-    res = readpassphrase(_("EncFS Password: "), passBuf, sizeof(passBuf),
+    res = readpassphrase(_("EnciFS Password: "), passBuf, sizeof(passBuf),
                          RPP_ECHO_OFF);
   }
 
@@ -1505,7 +1505,7 @@ std::string readPassword(int FD) {
   return result;
 }
 
-CipherKey EncFSConfig::getUserKey(const std::string &passProg,
+CipherKey EnciFSConfig::getUserKey(const std::string &passProg,
                                   const std::string &rootDir) {
   // have a child process run the command and get the result back to us.
   int fds[2], pid;
@@ -1552,13 +1552,13 @@ CipherKey EncFSConfig::getUserKey(const std::string &passProg,
 
     char tmpBuf[8];
 
-    setenv(ENCFS_ENV_ROOTDIR, rootDir.c_str(), 1);
+    setenv(ENCIFS_ENV_ROOTDIR, rootDir.c_str(), 1);
 
     snprintf(tmpBuf, sizeof(tmpBuf) - 1, "%i", stdOutCopy);
-    setenv(ENCFS_ENV_STDOUT, tmpBuf, 1);
+    setenv(ENCIFS_ENV_STDOUT, tmpBuf, 1);
 
     snprintf(tmpBuf, sizeof(tmpBuf) - 1, "%i", stdErrCopy);
-    setenv(ENCFS_ENV_STDERR, tmpBuf, 1);
+    setenv(ENCIFS_ENV_STDERR, tmpBuf, 1);
 
     execvp(argv[0], (char *const *)argv);  // returns only on error..
 
@@ -1581,17 +1581,17 @@ CipherKey EncFSConfig::getUserKey(const std::string &passProg,
   return result;
 }
 
-CipherKey EncFSConfig::getNewUserKey() {
+CipherKey EnciFSConfig::getNewUserKey() {
   CipherKey userKey;
   char passBuf[MaxPassBuf];
   char passBuf2[MaxPassBuf];
 
   do {
     // xgroup(common)
-    char *res1 = readpassphrase(_("New Encfs Password: "), passBuf,
+    char *res1 = readpassphrase(_("New Encifs Password: "), passBuf,
                                 sizeof(passBuf) - 1, RPP_ECHO_OFF);
     // xgroup(common)
-    char *res2 = readpassphrase(_("Verify Encfs Password: "), passBuf2,
+    char *res2 = readpassphrase(_("Verify Encifs Password: "), passBuf2,
                                 sizeof(passBuf2) - 1, RPP_ECHO_OFF);
 
     if ((res1 != nullptr) && (res2 != nullptr) &&
@@ -1609,9 +1609,9 @@ CipherKey EncFSConfig::getNewUserKey() {
   return userKey;
 }
 
-RootPtr initFS(EncFS_Context *ctx, const std::shared_ptr<EncFS_Opts> &opts) {
+RootPtr initFS(EnciFS_Context *ctx, const std::shared_ptr<EnciFS_Opts> &opts) {
   RootPtr rootInfo;
-  std::shared_ptr<EncFSConfig> config(new EncFSConfig);
+  std::shared_ptr<EnciFSConfig> config(new EnciFSConfig);
 
   if (readConfig(opts->rootDir, config.get(), opts->config) != Config_None) {
     if (config->blockMACBytes == 0 && opts->requireMac) {
@@ -1648,7 +1648,7 @@ RootPtr initFS(EncFS_Context *ctx, const std::shared_ptr<EncFS_Opts> &opts) {
     }
 
     if (opts->delayMount) {
-      rootInfo = std::make_shared<encfs::EncFS_Root>();
+      rootInfo = std::make_shared<encifs::EnciFS_Root>();
       rootInfo->cipher = cipher;
       rootInfo->root = std::shared_ptr<DirNode>();
       return rootInfo;
@@ -1719,7 +1719,7 @@ RootPtr initFS(EncFS_Context *ctx, const std::shared_ptr<EncFS_Opts> &opts) {
     fsConfig->reverseEncryption = opts->reverseEncryption;
     fsConfig->opts = opts;
 
-    rootInfo = std::make_shared<encfs::EncFS_Root>();
+    rootInfo = std::make_shared<encifs::EnciFS_Root>();
     rootInfo->cipher = cipher;
     rootInfo->volumeKey = volumeKey;
     rootInfo->root = std::make_shared<DirNode>(ctx, opts->rootDir, fsConfig);
@@ -1738,7 +1738,7 @@ void unmountFS(const char *mountPoint) {
   fuse_unmount(mountPoint, nullptr);
 #ifdef __APPLE__
   // fuse_unmount does not work on Mac OS, see #428
-  // However it makes encfs to hang, so we must unmount
+  // However it makes encifs to hang, so we must unmount
   if (unmount(mountPoint, MNT_FORCE) != 0) {
     int eno = errno;
     if (eno != EINVAL) { //[EINVAL] The requested directory is not in the mount table.
@@ -1750,7 +1750,7 @@ void unmountFS(const char *mountPoint) {
   pid_t pid;
   int status;
   if ((pid = fork()) == 0) {
-    execl("/bin/pkill", "/bin/pkill", "-INT", "-if", string("(^|/)encfs .*(/|.:).* ").append(mountPoint).append("( |$)").c_str(), (char *)0);
+    execl("/bin/pkill", "/bin/pkill", "-INT", "-if", string("(^|/)encifs .*(/|.:).* ").append(mountPoint).append("( |$)").c_str(), (char *)0);
     int eno = errno;
     RLOG(ERROR) << "Filesystem unmount failed: " << strerror(eno);
     _Exit(127);
@@ -1761,7 +1761,7 @@ void unmountFS(const char *mountPoint) {
 #endif
 }
 
-int remountFS(EncFS_Context *ctx) {
+int remountFS(EnciFS_Context *ctx) {
   VLOG(1) << "Attempting to reinitialize filesystem";
 
   RootPtr rootInfo = initFS(ctx, ctx->opts);
@@ -1773,7 +1773,7 @@ int remountFS(EncFS_Context *ctx) {
   return -EACCES;
 }
 
-bool unmountFS(EncFS_Context *ctx) {
+bool unmountFS(EnciFS_Context *ctx) {
   if (ctx->opts->mountOnDemand) {
     VLOG(1) << "Detaching filesystem due to inactivity: "
             << ctx->opts->unmountPoint;
@@ -1787,4 +1787,4 @@ bool unmountFS(EncFS_Context *ctx) {
   return true;
 }
 
-}  // namespace encfs
+}  // namespace encifs

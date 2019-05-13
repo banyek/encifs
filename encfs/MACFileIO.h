@@ -31,7 +31,7 @@
 #include "FSConfig.h"
 #include "Interface.h"
 
-namespace encfs {
+namespace encifs {
 
 class Cipher;
 class FileIO;
@@ -41,7 +41,7 @@ class MACFileIO : public BlockFileIO {
  public:
   /*
       If warnOnlyMode is enabled, then a MAC comparison failure will only
-      result in a warning message from encfs -- the garbled data will still
+      result in a warning message from encifs -- the garbled data will still
       be made available..
   */
   MACFileIO(std::shared_ptr<FileIO> base, const FSConfigPtr &cfg);
@@ -74,6 +74,6 @@ class MACFileIO : public BlockFileIO {
   bool warnOnly;
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

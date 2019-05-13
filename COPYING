@@ -1,12 +1,12 @@
 
-The code comprising the EncFS library (libencfs) is licensed under the LGPL.
-The main programs (encfs, encfsctl, etc) are licensed under the GPL.
+The code comprising the EnciFS library (libencifs) is licensed under the LGPL.
+The main programs (encifs, encifsctl, etc) are licensed under the GPL.
 
 For details of the licenses, see COPYING.LGPL and COPYING.GPL.
 
 ===========================================================================
 
-The following 3rd party libraries are included in the EncFS source release
+The following 3rd party libraries are included in the EnciFS source release
 from github:
 
 * easylogging++ : a logging library, which is supplied with the following license

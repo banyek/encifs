@@ -35,7 +35,7 @@
 
 #define BLOCKDATA(BLOCK) (unsigned char *)(BLOCK)->data->data
 
-namespace encfs {
+namespace encifs {
 
 struct BlockList {
   BlockList *next;
@@ -130,4 +130,4 @@ void MemoryPool::destroyAll() {
   }
 }
 
-}  // namespace encfs
+}  // namespace encifs

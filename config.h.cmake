@@ -1,4 +1,4 @@
-#define VERSION "@ENCFS_VERSION@"
+#define VERSION "@ENCIFS_VERSION@"
 
 #cmakedefine HAVE_ATTR_XATTR_H
 #cmakedefine HAVE_SYS_XATTR_H

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Benchmark EncFS against eCryptfs
+# Benchmark EnciFS against eCryptfs
 
 use File::Temp;
 use warnings;
@@ -10,7 +10,7 @@ require("integration/common.pl");
 # Create a new empty working directory
 sub newWorkingDir {
     my $prefix     = shift;
-    my $workingDir = mkdtemp("$prefix/encfs-performance-XXXX")
+    my $workingDir = mkdtemp("$prefix/encifs-performance-XXXX")
       || die("Could not create temporary directory");
 
     return $workingDir;
@@ -20,25 +20,25 @@ sub cleanup {
     print "cleaning up...";
     my $workingDir = shift;
     system("umount $workingDir/ecryptfs_plaintext");
-    system("fusermount -u $workingDir/encfs_plaintext");
+    system("fusermount -u $workingDir/encifs_plaintext");
     system("rm -Rf $workingDir");
     print "done\n";
 }
 
-sub mount_encfs {
+sub mount_encifs {
     my $workingDir = shift;
 
-    my $c = "$workingDir/encfs_ciphertext";
-    my $p = "$workingDir/encfs_plaintext";
+    my $c = "$workingDir/encifs_ciphertext";
+    my $p = "$workingDir/encifs_plaintext";
 
     mkdir($c);
     mkdir($p);
 
-    delete $ENV{"ENCFS6_CONFIG"};
-    system("./build/encfs --extpass=\"echo test\" --standard $c $p > /dev/null");
-    waitForFile("$c/.encfs6.xml") or die("Control file not created");
+    delete $ENV{"ENCIFS6_CONFIG"};
+    system("./build/encifs --extpass=\"echo test\" --standard $c $p > /dev/null");
+    waitForFile("$c/.encifs6.xml") or die("Control file not created");
 
-    print "# encfs mounted on $p\n";
+    print "# encifs mounted on $p\n";
 
     return $p;
 }
@@ -109,21 +109,21 @@ sub tabulate {
     my $r;
 
     $r = shift;
-    my @encfs = @{$r};
+    my @encifs = @{$r};
     $r = shift;
     my @ecryptfs;
     if($r) {
         @ecryptfs = @{$r};
     }
 
-    print " Test           | EncFS        | eCryptfs     | EncFS advantage\n";
+    print " Test           | EnciFS        | eCryptfs     | EnciFS advantage\n";
     print ":---------------|-------------:|-------------:|---------------:\n";
 
-    for ( my $i = 0 ; $i <= $#encfs ; $i++ ) {
-        my $test = $encfs[$i][0];
-        my $unit = $encfs[$i][2];
+    for ( my $i = 0 ; $i <= $#encifs ; $i++ ) {
+        my $test = $encifs[$i][0];
+        my $unit = $encifs[$i][2];
 
-        my $en = $encfs[$i][1];
+        my $en = $encifs[$i][1];
         my $ec = 0;
         my $ratio = 0;
 
@@ -166,9 +166,9 @@ sub main {
     while ( $prefix = shift(@ARGV) ) {
         $workingDir = newWorkingDir($prefix);
 
-        print "# mounting encfs\n";
-        $mountpoint = mount_encfs($workingDir);
-        my $encfs_results = benchmark($mountpoint);
+        print "# mounting encifs\n";
+        $mountpoint = mount_encifs($workingDir);
+        my $encifs_results = benchmark($mountpoint);
 
         print "# mounting ecryptfs\n";
         $mountpoint = mount_ecryptfs($workingDir);
@@ -181,7 +181,7 @@ sub main {
 
         print "\nResults for $prefix\n";
         print "==============================\n\n";
-        tabulate( $encfs_results, $ecryptfs_results );
+        tabulate( $encifs_results, $ecryptfs_results );
         print "\n";
     }
 }

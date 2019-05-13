@@ -28,7 +28,7 @@
 #include "Interface.h"  // for Interface
 #include "NameIO.h"     // for NameIO
 
-namespace encfs {
+namespace encifs {
 
 class Cipher;
 
@@ -68,6 +68,6 @@ class BlockNameIO : public NameIO {
   bool _caseInsensitive;
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

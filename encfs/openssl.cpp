@@ -33,7 +33,7 @@
 
 #include "Error.h"
 
-namespace encfs {
+namespace encifs {
 
 unsigned long pthreads_thread_id() { return (unsigned long)pthread_self(); }
 
@@ -102,4 +102,4 @@ void openssl_shutdown(bool threaded) {
   }
 }
 
-}  // namespace encfs
+}  // namespace encifs

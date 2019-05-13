@@ -33,7 +33,7 @@
 
 using namespace std;
 
-namespace encfs {
+namespace encifs {
 
 static std::shared_ptr<NameIO> NewStreamNameIO(
     const Interface &iface, const std::shared_ptr<Cipher> &cipher,
@@ -47,12 +47,12 @@ static bool StreamIO_registered = NameIO::Register(
     StreamNameIO::CurrentInterface(), NewStreamNameIO);
 
 /*
-    - Version 0.1 is for EncFS 0.x support.  The difference to 1.0 is that 0.x
+    - Version 0.1 is for EnciFS 0.x support.  The difference to 1.0 is that 0.x
       stores the file checksums at the end of the encoded name, where 1.0
       stores them at the beginning.
 
     - Version 1.0 is the basic stream encoding mode used since the beginning of
-      EncFS.  There is a slight difference in filename encodings from EncFS 0.x
+      EnciFS.  There is a slight difference in filename encodings from EnciFS 0.x
       to 1.0.x.  This implements just the 1.0.x method.
 
     - Version 1.1 adds support for IV chaining.  This is transparently
@@ -65,7 +65,7 @@ static bool StreamIO_registered = NameIO::Register(
       encrypted name.  Added because there is no good reason to chop to 16
       bits.
 
-    - Version 2.1 adds support for version 0 for EncFS 0.x compatibility.
+    - Version 2.1 adds support for version 0 for EnciFS 0.x compatibility.
 */
 Interface StreamNameIO::CurrentInterface() {
   // implement major version 2, 1, and 0
@@ -112,7 +112,7 @@ int StreamNameIO::encodeName(const char *plaintextName, int length,
     encodedName[1] = (mac)&0xff;
     encodeBegin = (unsigned char *)encodedName + 2;
   } else {
-    // encfs 0.x stored checksums at the end.
+    // encifs 0.x stored checksums at the end.
     encodedName[length] = (mac >> 8) & 0xff;
     encodedName[length + 1] = (mac)&0xff;
     encodeBegin = (unsigned char *)encodedName;
@@ -165,7 +165,7 @@ int StreamNameIO::decodeName(const char *encodedName, int length, uint64_t *iv,
 
     memcpy(plaintextName, tmpBuf + 2, decodedStreamLen);
   } else {
-    // encfs 0.x stored checksums at the end.
+    // encifs 0.x stored checksums at the end.
     mac = ((unsigned int)((unsigned char)tmpBuf[decodedStreamLen])) << 8 |
           ((unsigned int)((unsigned char)tmpBuf[decodedStreamLen + 1]));
 
@@ -192,4 +192,4 @@ int StreamNameIO::decodeName(const char *encodedName, int length, uint64_t *iv,
 
 bool StreamNameIO::Enabled() { return true; }
 
-}  // namespace encfs
+}  // namespace encifs

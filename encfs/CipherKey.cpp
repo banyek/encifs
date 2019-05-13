@@ -20,10 +20,10 @@
 
 #include "CipherKey.h"
 
-namespace encfs {
+namespace encifs {
 
 AbstractCipherKey::AbstractCipherKey() = default;
 
 AbstractCipherKey::~AbstractCipherKey() = default;
 
-}  // namespace encfs
+}  // namespace encifs

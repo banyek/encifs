@@ -30,9 +30,9 @@
 #include "CipherKey.h"
 #include "Interface.h"
 #include "Range.h"
-#include "encfs.h"
+#include "encifs.h"
 
-namespace encfs {
+namespace encifs {
 
 /*
     Mostly pure virtual interface defining operations on a cipher.
@@ -153,6 +153,6 @@ class Cipher {
                            const CipherKey &key) const = 0;
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

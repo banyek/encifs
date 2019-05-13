@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 
-#include "encfs/MemoryPool.h"
+#include "encifs/MemoryPool.h"
 
-using namespace encfs;
+using namespace encifs;
 
 TEST(MemoryPool, Allocate) {
   auto block = MemoryPool::allocate(1024);

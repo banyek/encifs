@@ -25,7 +25,7 @@
 #include "ConfigVar.h"
 #include "Error.h"
 
-namespace encfs {
+namespace encifs {
 
 Interface::Interface(const char *name_, int Current, int Revision, int Age)
     : _name(name_), _current(Current), _revision(Revision), _age(Age) {}
@@ -153,4 +153,4 @@ const ConfigVar &operator>>(const ConfigVar &src, Interface &iface) {
   return src;
 }
 
-}  // namespace encfs
+}  // namespace encifs

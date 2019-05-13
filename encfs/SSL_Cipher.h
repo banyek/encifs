@@ -34,7 +34,7 @@ struct evp_cipher_st;
 using EVP_CIPHER = struct evp_cipher_st;
 #endif
 
-namespace encfs {
+namespace encifs {
 
 class SSLKey;
 
@@ -150,6 +150,6 @@ class SSL_Cipher : public Cipher {
                    const std::shared_ptr<SSLKey> &key) const;
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

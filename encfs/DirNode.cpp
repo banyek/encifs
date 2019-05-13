@@ -44,7 +44,7 @@
 
 using namespace std;
 
-namespace encfs {
+namespace encifs {
 
 class DirDeleter {
  public:
@@ -91,14 +91,14 @@ static bool _nextName(struct dirent *&de, const std::shared_ptr<DIR> &dir,
 std::string DirTraverse::nextPlaintextName(int *fileType, ino_t *inode) {
   struct dirent *de = nullptr;
   while (_nextName(de, dir, fileType, inode)) {
-    if (root && (strcmp(".encfs6.xml", de->d_name) == 0)) {
+    if (root && (strcmp(".encifs6.xml", de->d_name) == 0)) {
       VLOG(1) << "skipping filename: " << de->d_name;
       continue;
     }
     try {
       uint64_t localIv = iv;
       return naming->decodePath(de->d_name, &localIv);
-    } catch (encfs::Error &ex) {
+    } catch (encifs::Error &ex) {
       // .. .problem decoding, ignore it and continue on to next name..
       VLOG(1) << "error decoding filename: " << de->d_name;
     }
@@ -111,7 +111,7 @@ std::string DirTraverse::nextInvalid() {
   struct dirent *de = nullptr;
   // find the first name which produces a decoding error...
   while (_nextName(de, dir, (int *)nullptr, (ino_t *)nullptr)) {
-    if (root && (strcmp(".encfs6.xml", de->d_name) == 0)) {
+    if (root && (strcmp(".encifs6.xml", de->d_name) == 0)) {
       VLOG(1) << "skipping filename: " << de->d_name;
       continue;
     }
@@ -119,7 +119,7 @@ std::string DirTraverse::nextInvalid() {
       uint64_t localIv = iv;
       naming->decodePath(de->d_name, &localIv);
       continue;
-    } catch (encfs::Error &ex) {
+    } catch (encifs::Error &ex) {
       return string(de->d_name);
     }
   }
@@ -209,7 +209,7 @@ bool RenameOp::apply() {
     }
 
     return true;
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(WARNING) << err.what();
     return false;
   }
@@ -236,7 +236,7 @@ void RenameOp::undo() {
     ::rename(it->newCName.c_str(), it->oldCName.c_str());
     try {
       dn->renameNode(it->newPName.c_str(), it->oldPName.c_str(), false);
-    } catch (encfs::Error &err) {
+    } catch (encifs::Error &err) {
       RLOG(WARNING) << err.what();
       // continue on anyway...
     }
@@ -246,7 +246,7 @@ void RenameOp::undo() {
   RLOG(WARNING) << "Undo rename count: " << undoCount;
 }
 
-DirNode::DirNode(EncFS_Context *_ctx, const string &sourceDir,
+DirNode::DirNode(EnciFS_Context *_ctx, const string &sourceDir,
                  const FSConfigPtr &_config) {
   pthread_mutex_init(&mutex, nullptr);
 
@@ -298,7 +298,7 @@ bool DirNode::touchesMountpoint(const char *realPath) const {
  * ciphertext root directory name prefixed.
  *
  * Example:
- * $ encfs -f -v cipher plain
+ * $ encifs -f -v cipher plain
  * $ cd plain
  * $ touch foobar
  * cipherPath: /foobar encoded to cipher/NKAKsn2APtmquuKPoF4QRPxS
@@ -335,7 +335,7 @@ string DirNode::plainPath(const char *cipherPath_) {
 
     // Default.
     return naming->decodePath(cipherPath_);
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "decode err: " << err.what();
     return string();
   }
@@ -351,7 +351,7 @@ string DirNode::relativeCipherPath(const char *plaintextPath) {
     }
 
     return naming->encodePath(plaintextPath);
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "encode err: " << err.what();
     return string();
   }
@@ -375,7 +375,7 @@ DirTraverse DirNode::openDir(const char *plaintextPath) {
     if (naming->getChainedNameIV()) {
       naming->encodePath(plaintextPath, &iv);
     }
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "encode err: " << err.what();
   }
   return DirTraverse(dp, iv, naming, (strlen(plaintextPath) == 1));
@@ -420,7 +420,7 @@ bool DirNode::genRenameList(list<RenameEl> &renameList, const char *fromP,
 
     try {
       plainName = naming->decodePath(de->d_name, &localIV);
-    } catch (encfs::Error &ex) {
+    } catch (encifs::Error &ex) {
       // if filename can't be decoded, then ignore it..
       continue;
     }
@@ -465,7 +465,7 @@ bool DirNode::genRenameList(list<RenameEl> &renameList, const char *fromP,
       VLOG(1) << "adding file " << oldFull << " to rename list";
 
       renameList.push_back(ren);
-    } catch (encfs::Error &err) {
+    } catch (encifs::Error &err) {
       // We can't convert this name, because we don't have a valid IV for
       // it (or perhaps a valid key).. It will be inaccessible..
       RLOG(WARNING) << "Aborting rename: error on file: "
@@ -620,7 +620,7 @@ int DirNode::rename(const char *fromPlaintext, const char *toPlaintext) {
         ::utime(toCName.c_str(), &ut);
       }
     }
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     // exception from renameNode, just show the error and continue..
     RLOG(WARNING) << err.what();
     res = -EIO;
@@ -779,4 +779,4 @@ int DirNode::unlink(const char *plaintextName) {
   return res;
 }
 
-}  // namespace encfs
+}  // namespace encifs

@@ -33,7 +33,7 @@
 #include "Interface.h"
 #include "base64.h"
 
-namespace encfs {
+namespace encifs {
 
 XmlValue::~XmlValue() = default;
 
@@ -181,7 +181,7 @@ class XmlNode : virtual public XmlValue {
     if (name[0] == '@') {
       const char *value = element->Attribute(name + 1);
       if (value != nullptr) {
-        return std::make_shared<encfs::XmlValue>(value);
+        return std::make_shared<encifs::XmlValue>(value);
       }
       return XmlValuePtr();
     }
@@ -219,16 +219,16 @@ XmlValuePtr XmlReader::operator[](const char *name) const {
   tinyxml2::XMLNode *node = pd->doc->FirstChildElement(name);
   if (node == nullptr) {
     RLOG(ERROR) << "Xml node " << name << " not found";
-    return std::make_shared<encfs::XmlValue>();
+    return std::make_shared<encifs::XmlValue>();
   }
 
   tinyxml2::XMLElement *element = node->ToElement();
   if (element == nullptr) {
     RLOG(ERROR) << "Xml node " << name << " not element";
-    return std::make_shared<encfs::XmlValue>();
+    return std::make_shared<encifs::XmlValue>();
   }
 
   return XmlValuePtr(new XmlNode(element));
 }
 
-}  // namespace encfs
+}  // namespace encifs

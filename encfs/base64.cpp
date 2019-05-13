@@ -24,7 +24,7 @@
 
 #include "Error.h"
 
-namespace encfs {
+namespace encifs {
 
 // change between two powers of two, stored as the low bits of the bytes in the
 // arrays.
@@ -286,4 +286,4 @@ std::string B64StandardEncode(const std::vector<unsigned char> &inputBuffer) {
   return encodedString;
 }
 
-}  // namespace encfs
+}  // namespace encifs

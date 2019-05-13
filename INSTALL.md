@@ -1,18 +1,18 @@
-This document provides generic information for compiling EncFS.
+This document provides generic information for compiling EnciFS.
 
 If you are looking for specific instructions for your operating system or distribution,
-take a look at the **[wiki](https://github.com/vgough/encfs/wiki)**.
+take a look at the **[wiki](https://github.com/vgough/encifs/wiki)**.
 
-Compiling EncFS
+Compiling EnciFS
 ===============
 
-EncFS uses the CMake toolchain to create makefiles.
+EnciFS uses the CMake toolchain to create makefiles.
 
-Quickest way to build and test EncFS :
+Quickest way to build and test EnciFS :
 
     ./build.sh
 
-Or following are the detailed steps to build EncFS:
+Or following are the detailed steps to build EnciFS:
 
     mkdir build
     cd build
@@ -32,8 +32,8 @@ encrypted filesystem and run tests on it:
 
     make integration
 
-The compilation process creates two executables, encfs and encfsctl in
-the encfs directory.  You can install to in a system directory via:
+The compilation process creates two executables, encifs and encifsctl in
+the encifs directory.  You can install to in a system directory via:
 
     make install
 
@@ -42,13 +42,13 @@ installed, then set the CMAKE_INSTALL_PREFIX option when running cmake.  Eg:
 
     cmake .. -DCMAKE_INSTALL_PREFIX=/opt/local
 
-Encfs and encfsctl can also be installed by hand.  They need no special
-permissions.  You may also want the man pages encfs.1 and encfsctl.1.
+Encifs and encifsctl can also be installed by hand.  They need no special
+permissions.  You may also want the man pages encifs.1 and encifsctl.1.
 
 Dependencies
 ============
 
-EncFS depends on a number of libraries:
+EnciFS depends on a number of libraries:
 
     * fuse                   : the userspace filesystem layer
     * openssl / libressl     : used for cryptographic primitives

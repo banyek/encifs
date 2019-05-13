@@ -52,7 +52,7 @@
 
 using namespace std;
 using gnu::autosprintf;
-using namespace encfs;
+using namespace encifs;
 
 static int showInfo(int argc, char **argv);
 static int showVersion(int argc, char **argv);
@@ -115,12 +115,12 @@ struct CommandOpts {
      gettext_noop("  -- print version number and exit")},
     {0, 0, 0, 0, 0, 0}};
 
-auto ctx = std::make_shared<EncFS_Context>();
+auto ctx = std::make_shared<EnciFS_Context>();
 
 static void usage(const char *name) {
-  cerr << autosprintf(_("encfsctl version %s"), VERSION) << "\n"
+  cerr << autosprintf(_("encifsctl version %s"), VERSION) << "\n"
        << _("Usage:\n")
-       // displays usage commands, eg "./encfs (root dir) ..."
+       // displays usage commands, eg "./encifs (root dir) ..."
        // xgroup(usage)
        << autosprintf(
               _("%s (root dir)\n"
@@ -130,7 +130,7 @@ static void usage(const char *name) {
   int offset = 0;
   while (commands[offset].name != 0) {
     if (commands[offset].argStr != 0) {
-      cerr << "encfsctl " << commands[offset].name << " "
+      cerr << "encifsctl " << commands[offset].name << " "
            << commands[offset].argStr << "\n"
            << gettext(commands[offset].usageStr) << "\n";
     }
@@ -156,7 +156,7 @@ static int showVersion(int argc, char **argv) {
   (void)argc;
   (void)argv;
   // xgroup(usage)
-  cerr << autosprintf(_("encfsctl version %s"), VERSION) << "\n";
+  cerr << autosprintf(_("encifsctl version %s"), VERSION) << "\n";
 
   return EXIT_SUCCESS;
 }
@@ -166,7 +166,7 @@ static int showInfo(int argc, char **argv) {
   string rootDir = argv[1];
   if (!checkDir(rootDir)) return EXIT_FAILURE;
 
-  std::shared_ptr<EncFSConfig> config(new EncFSConfig);
+  std::shared_ptr<EnciFSConfig> config(new EnciFSConfig);
   ConfigType type = readConfig(rootDir, config.get(), "");
 
   // show information stored in config..
@@ -178,8 +178,8 @@ static int showInfo(int argc, char **argv) {
     case Config_Prehistoric:
       // xgroup(diag)
       cout << _(
-          "A really old EncFS filesystem was found. \n"
-          "It is not supported in this EncFS build.\n");
+          "A really old EnciFS filesystem was found. \n"
+          "It is not supported in this EnciFS build.\n");
       return EXIT_FAILURE;
     case Config_V3:
       // xgroup(diag)
@@ -218,7 +218,7 @@ static int showInfo(int argc, char **argv) {
 
 static RootPtr initRootInfo(int &argc, char **&argv) {
   RootPtr result;
-  std::shared_ptr<EncFS_Opts> opts(new EncFS_Opts());
+  std::shared_ptr<EnciFS_Opts> opts(new EnciFS_Opts());
   opts->createIfNotFound = false;
   opts->checkKey = false;
 
@@ -269,7 +269,7 @@ static RootPtr initRootInfo(const char *crootDir) {
   RootPtr result;
 
   if (checkDir(rootDir)) {
-    std::shared_ptr<EncFS_Opts> opts(new EncFS_Opts());
+    std::shared_ptr<EnciFS_Opts> opts(new EnciFS_Opts());
     opts->rootDir = rootDir;
     opts->createIfNotFound = false;
     opts->checkKey = false;
@@ -351,7 +351,7 @@ static int cmd_ls(int argc, char **argv) {
       for (string name = dt.nextPlaintextName(); !name.empty();
            name = dt.nextPlaintextName()) {
         std::shared_ptr<FileNode> fnode =
-            rootInfo->root->lookupNode(name.c_str(), "encfsctl-ls");
+            rootInfo->root->lookupNode(name.c_str(), "encifsctl-ls");
         struct stat stbuf;
         fnode->getAttr(&stbuf);
 
@@ -373,13 +373,13 @@ static int cmd_ls(int argc, char **argv) {
 
 // apply an operation to every block in the file
 template <typename T>
-int processContents(const std::shared_ptr<EncFS_Root> &rootInfo,
+int processContents(const std::shared_ptr<EnciFS_Root> &rootInfo,
                     const char *path, T &op) {
   int errCode = 0;
   std::shared_ptr<FileNode> node;
 
   try {
-    node = rootInfo->root->openNode(path, "encfsctl", O_RDONLY, &errCode);
+    node = rootInfo->root->openNode(path, "encifsctl", O_RDONLY, &errCode);
   }
   catch(...) {}
 
@@ -387,7 +387,7 @@ int processContents(const std::shared_ptr<EncFS_Root> &rootInfo,
     // try treating filename as an enciphered path
     string plainName = rootInfo->root->plainPath(path);
     if (plainName.length() > 0) {
-      node = rootInfo->root->lookupNode(plainName.c_str(), "encfsctl");
+      node = rootInfo->root->lookupNode(plainName.c_str(), "encifsctl");
     }
     if (node) {
       errCode = node->open(O_RDONLY);
@@ -441,7 +441,7 @@ static int cmd_cat(int argc, char **argv) {
 }
 
 static int copyLink(const struct stat &stBuf,
-                    const std::shared_ptr<EncFS_Root> &rootInfo,
+                    const std::shared_ptr<EnciFS_Root> &rootInfo,
                     const string &cpath, const string &destName) {
   std::vector<char> buf(stBuf.st_size + 1, '\0');
   int res = ::readlink(cpath.c_str(), buf.data(), stBuf.st_size);
@@ -462,13 +462,13 @@ static int copyLink(const struct stat &stBuf,
   return EXIT_SUCCESS;
 }
 
-static int copyContents(const std::shared_ptr<EncFS_Root> &rootInfo,
-                        const char *encfsName, const char *targetName) {
+static int copyContents(const std::shared_ptr<EnciFS_Root> &rootInfo,
+                        const char *encifsName, const char *targetName) {
   std::shared_ptr<FileNode> node =
-      rootInfo->root->lookupNode(encfsName, "encfsctl");
+      rootInfo->root->lookupNode(encifsName, "encifsctl");
 
   if (!node) {
-    cerr << "unable to open " << encfsName << "\n";
+    cerr << "unable to open " << encifsName << "\n";
     return EXIT_FAILURE;
   } else {
     struct stat st;
@@ -476,11 +476,11 @@ static int copyContents(const std::shared_ptr<EncFS_Root> &rootInfo,
     if (node->getAttr(&st) != 0) return EXIT_FAILURE;
 
     if ((st.st_mode & S_IFMT) == S_IFLNK) {
-      string d = rootInfo->root->cipherPath(encfsName);
+      string d = rootInfo->root->cipherPath(encifsName);
       char linkContents[PATH_MAX + 2];
 
       if (readlink(d.c_str(), linkContents, PATH_MAX + 1) <= 0) {
-        cerr << "unable to read link " << encfsName << "\n";
+        cerr << "unable to read link " << encifsName << "\n";
         return EXIT_FAILURE;
       }
       if (symlink(rootInfo->root->plainPath(linkContents).c_str(),
@@ -492,7 +492,7 @@ static int copyContents(const std::shared_ptr<EncFS_Root> &rootInfo,
       int outfd = creat(targetName, st.st_mode);
 
       WriteOutput output(outfd);
-      processContents(rootInfo, encfsName, output);
+      processContents(rootInfo, encifsName, output);
     }
   }
   return EXIT_SUCCESS;
@@ -505,7 +505,7 @@ static bool endsWith(const string &str, char ch) {
     return str[str.length() - 1] == ch;
 }
 
-static int traverseDirs(const std::shared_ptr<EncFS_Root> &rootInfo,
+static int traverseDirs(const std::shared_ptr<EnciFS_Root> &rootInfo,
                         string volumeDir, string destDir) {
   if (!endsWith(volumeDir, '/')) volumeDir.append("/");
   if (!endsWith(destDir, '/')) destDir.append("/");
@@ -515,7 +515,7 @@ static int traverseDirs(const std::shared_ptr<EncFS_Root> &rootInfo,
   {
     struct stat st;
     std::shared_ptr<FileNode> dirNode =
-        rootInfo->root->lookupNode(volumeDir.c_str(), "encfsctl");
+        rootInfo->root->lookupNode(volumeDir.c_str(), "encifsctl");
     if (dirNode->getAttr(&st)) return EXIT_FAILURE;
 
     mkdir(destDir.c_str(), st.st_mode);
@@ -568,7 +568,7 @@ static int cmd_export(int argc, char **argv) {
   return traverseDirs(rootInfo, "/", destDir);
 }
 
-int showcruft(const std::shared_ptr<EncFS_Root> &rootInfo,
+int showcruft(const std::shared_ptr<EnciFS_Root> &rootInfo,
               const char *dirName) {
   int found = 0;
   DirTraverse dt = rootInfo->root->openDir(dirName);
@@ -641,7 +641,7 @@ static int do_chpasswd(bool useStdin, bool annotate, bool checkOnly, int argc,
   string rootDir = argv[1];
   if (!checkDir(rootDir)) return EXIT_FAILURE;
 
-  EncFSConfig *config = new EncFSConfig;
+  EnciFSConfig *config = new EnciFSConfig;
   ConfigType cfgType = readConfig(rootDir, config, "");
 
   if (cfgType == Config_None) {
@@ -659,7 +659,7 @@ static int do_chpasswd(bool useStdin, bool annotate, bool checkOnly, int argc,
   }
 
   // ask for existing password
-  cout << _("Enter current Encfs password\n");
+  cout << _("Enter current Encifs password\n");
   if (annotate) cerr << "$PROMPT$ passwd" << endl;
   CipherKey userKey = config->getUserKey(useStdin);
   if (!userKey) return EXIT_FAILURE;
@@ -680,7 +680,7 @@ static int do_chpasswd(bool useStdin, bool annotate, bool checkOnly, int argc,
 
   // Now, get New user key..
   userKey.reset();
-  cout << _("Enter new Encfs password\n");
+  cout << _("Enter new Encifs password\n");
   // reinitialize salt and iteration count
   config->kdfIterations = 0;  // generate new
 
@@ -733,7 +733,7 @@ static int ckpasswdAutomaticly(int argc, char **argv) {
 
 int main(int argc, char **argv) {
   START_EASYLOGGINGPP(argc, argv);
-  encfs::initLogging();
+  encifs::initLogging();
 
 #if defined(ENABLE_NLS) && defined(LOCALEDIR)
   setlocale(LC_ALL, "");

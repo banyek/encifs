@@ -36,7 +36,7 @@
 
 using namespace std;
 
-namespace encfs {
+namespace encifs {
 
 // Version 1.0 worked on blocks of size (blockSize + headerSize).
 //   That is, it took [blockSize] worth of user data and added headers.
@@ -269,4 +269,4 @@ int MACFileIO::truncate(off_t size) {
 
 bool MACFileIO::isWritable() const { return base->isWritable(); }
 
-}  // namespace encfs
+}  // namespace encifs

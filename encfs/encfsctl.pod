@@ -5,34 +5,34 @@
 Copyright (c) 2003-2004, Valient Gough <vgough@pobox.com>
 All rights reserved.
 
-EncFS is free software; you can distribute it and/or modify it under the terms
+EnciFS is free software; you can distribute it and/or modify it under the terms
 of the GNU General Public License (GPL), as published by the Free Software
 Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 =head1 NAME
 
-encfsctl - administrative tool for working with EncFS filesystems
+encifsctl - administrative tool for working with EnciFS filesystems
 
 =head1 SYNOPSIS
 
-B<encfsctl> [I<command> I<command_args>]
+B<encifsctl> [I<command> I<command_args>]
 
-B<encfsctl> [info] I<rootdir>
+B<encifsctl> [info] I<rootdir>
 
-B<encfsctl> passwd I<rootdir>
+B<encifsctl> passwd I<rootdir>
 
-B<encfsctl> showcruft I<rootdir>
+B<encifsctl> showcruft I<rootdir>
 
-B<encfsctl> decode [--extpass=prog] I<rootdir> [encoded name ...]
+B<encifsctl> decode [--extpass=prog] I<rootdir> [encoded name ...]
 
-B<encfsctl> encode [--extpass=prog] I<rootdir> [plaintext name ...]
+B<encifsctl> encode [--extpass=prog] I<rootdir> [plaintext name ...]
 
-B<encfsctl> cat [--extpass=prog] [--reverse] I<rootdir> <(cipher|plain) filename>
+B<encifsctl> cat [--extpass=prog] [--reverse] I<rootdir> <(cipher|plain) filename>
 
 =head1 DESCRIPTION
 
-B<encfsctl> is an administrative tool for working with EncFS filesystems.  It
+B<encifsctl> is an administrative tool for working with EnciFS filesystems.  It
 is capable of changing the user supplied password, displaying basic information
 about an encrypted volume, and other related operations.
 
@@ -67,7 +67,7 @@ display encrypted filenames (to avoid leaking sensitive data through the debug
 channels).  So this command provides a way to decode the filenames.
 
 The B<--extpass> option can be used to specify the program which returns the
-password - just like with encfs.
+password - just like with encifs.
 
 If no names are specified on the command line, then a list of filenames will be
 read from stdin and decoded.
@@ -79,7 +79,7 @@ encoded version. This is useful if e.g. you are taking a backup of an
 encrypted directory and would like to exclude some files.
 
 The B<--extpass> option can be used to specify the program which returns the
-password - just like with encfs.
+password - just like with encifs.
 
 If no names are specified on the command line, then a list of filenames
 will be read from stdin and encoded.
@@ -96,9 +96,9 @@ instead be encrypted.
 
 Show information about an encrypted filesystem:
 
- % encfsctl info ~/.crypt
+ % encifsctl info ~/.crypt
 
- Version 5 configuration; created by EncFS 1.1 (revision 20040504)
+ Version 5 configuration; created by EnciFS 1.1 (revision 20040504)
  Filesystem cipher: "ssl/aes" , version 2:1:1
  Filename encoding: "nameio/block" , version 3:0:1
  Key Size: 192 bits
@@ -111,12 +111,12 @@ Show information about an encrypted filesystem:
 This library is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.  Please refer to the "COPYING" file distributed with
-B<encfs> for complete details.
+B<encifs> for complete details.
 
 =head1 AUTHORS
 
-B<EncFS> was written by B<< Valient Gough <vgough@pobox.com> >>.
+B<EnciFS> was written by B<< Valient Gough <vgough@pobox.com> >>.
 
 =head1 SEE ALSO
 
-encfs(1)
+encifs(1)

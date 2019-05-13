@@ -26,9 +26,9 @@
 #include "Error.h"
 #include "Mutex.h"
 
-namespace encfs {
+namespace encifs {
 
-EncFS_Context::EncFS_Context() {
+EnciFS_Context::EnciFS_Context() {
   pthread_cond_init(&wakeupCond, nullptr);
   pthread_mutex_init(&wakeupMutex, nullptr);
   pthread_mutex_init(&contextMutex, nullptr);
@@ -39,7 +39,7 @@ EncFS_Context::EncFS_Context() {
   currentFuseFh = 1;
 }
 
-EncFS_Context::~EncFS_Context() {
+EnciFS_Context::~EnciFS_Context() {
   pthread_mutex_destroy(&contextMutex);
   pthread_mutex_destroy(&wakeupMutex);
   pthread_cond_destroy(&wakeupCond);
@@ -48,11 +48,11 @@ EncFS_Context::~EncFS_Context() {
   openFiles.clear();
 }
 
-std::shared_ptr<DirNode> EncFS_Context::getRoot(int *errCode) {
+std::shared_ptr<DirNode> EnciFS_Context::getRoot(int *errCode) {
   return getRoot(errCode, false);
 }
 
-std::shared_ptr<DirNode> EncFS_Context::getRoot(int *errCode, bool skipUsageCount) {
+std::shared_ptr<DirNode> EnciFS_Context::getRoot(int *errCode, bool skipUsageCount) {
   std::shared_ptr<DirNode> ret = nullptr;
   do {
     {
@@ -81,7 +81,7 @@ std::shared_ptr<DirNode> EncFS_Context::getRoot(int *errCode, bool skipUsageCoun
   return ret;
 }
 
-void EncFS_Context::setRoot(const std::shared_ptr<DirNode> &r) {
+void EnciFS_Context::setRoot(const std::shared_ptr<DirNode> &r) {
   Lock lock(contextMutex);
 
   root = r;
@@ -93,7 +93,7 @@ void EncFS_Context::setRoot(const std::shared_ptr<DirNode> &r) {
 // This function is called periodically by the idle monitoring thread.
 // It checks for inactivity and unmount the FS after enough inactive cycles have passed.
 // Returns true if FS has really been unmounted, false otherwise.
-bool EncFS_Context::usageAndUnmount(int timeoutCycles) {
+bool EnciFS_Context::usageAndUnmount(int timeoutCycles) {
   Lock lock(contextMutex);
 
   if (root != nullptr) {
@@ -130,7 +130,7 @@ bool EncFS_Context::usageAndUnmount(int timeoutCycles) {
   return false;
 }
 
-std::shared_ptr<FileNode> EncFS_Context::lookupNode(const char *path) {
+std::shared_ptr<FileNode> EnciFS_Context::lookupNode(const char *path) {
   Lock lock(contextMutex);
 
   auto it = openFiles.find(std::string(path));
@@ -142,7 +142,7 @@ std::shared_ptr<FileNode> EncFS_Context::lookupNode(const char *path) {
   return std::shared_ptr<FileNode>();
 }
 
-void EncFS_Context::renameNode(const char *from, const char *to) {
+void EnciFS_Context::renameNode(const char *from, const char *to) {
   Lock lock(contextMutex);
 
   auto it = openFiles.find(std::string(from));
@@ -155,7 +155,7 @@ void EncFS_Context::renameNode(const char *from, const char *to) {
 
 // putNode stores "node" under key "path" in the "openFiles" map. It
 // increments the reference count if the key already exists.
-void EncFS_Context::putNode(const char *path,
+void EnciFS_Context::putNode(const char *path,
                             const std::shared_ptr<FileNode> &node) {
   Lock lock(contextMutex);
   auto &list = openFiles[std::string(path)];
@@ -164,9 +164,9 @@ void EncFS_Context::putNode(const char *path,
   fuseFhMap[node->fuseFh] = node;
 }
 
-// eraseNode is called by encfs_release in response to the RELEASE
+// eraseNode is called by encifs_release in response to the RELEASE
 // FUSE-command we get from the kernel.
-void EncFS_Context::eraseNode(const char *path,
+void EnciFS_Context::eraseNode(const char *path,
                               const std::shared_ptr<FileNode> &fnode) {
   Lock lock(contextMutex);
 
@@ -205,13 +205,13 @@ void EncFS_Context::eraseNode(const char *path,
 
 // nextFuseFh returns the next unused uint64 to serve as the FUSE file
 // handle for the kernel.
-uint64_t EncFS_Context::nextFuseFh() {
+uint64_t EnciFS_Context::nextFuseFh() {
   // This is thread-safe because currentFuseFh is declared as std::atomic
   return currentFuseFh++;
 }
 
 // lookupFuseFh finds "n" in "fuseFhMap" and returns the FileNode.
-std::shared_ptr<FileNode> EncFS_Context::lookupFuseFh(uint64_t n) {
+std::shared_ptr<FileNode> EnciFS_Context::lookupFuseFh(uint64_t n) {
   Lock lock(contextMutex);
   auto it = fuseFhMap.find(n);
   if (it == fuseFhMap.end()) {
@@ -220,4 +220,4 @@ std::shared_ptr<FileNode> EncFS_Context::lookupFuseFh(uint64_t n) {
   return it->second;
 }
 
-}  // namespace encfs
+}  // namespace encifs

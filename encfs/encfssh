@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# This script mounts an encfs filesystem, starts a shell in the mounted
+# This script mounts an encifs filesystem, starts a shell in the mounted
 # directory, and then unmounts the filesystem when the shell exits.
 # This is an equivalent of the cfssh utility for cfs.
 # Contributed by David Rosenstrauch.
@@ -12,7 +12,7 @@ canonicalize() {
 
 
 case $1 in "" | -h | --help)
-	echo "Usage: encfssh encrypted_directory [unencrypted-directory [-p]]"
+	echo "Usage: encifssh encrypted_directory [unencrypted-directory [-p]]"
 	echo "  -p   mount the unencrypted directory as public"
 	exit 1
 	;;
@@ -53,11 +53,11 @@ fi
 ## options can only have one of two values (empty, or "-- -o allow_other"), so
 ## this unquoted expansion is safe; disabling relevant shellcheck warning.
 ## See code review feedback requesting this attached to
-## https://github.com/vgough/encfs/pull/258/files/09b9fc5efb7c2694976baffe7dd21172fd182027
+## https://github.com/vgough/encifs/pull/258/files/09b9fc5efb7c2694976baffe7dd21172fd182027
 ## ...and that warning's explanation at https://github.com/koalaman/shellcheck/wiki/SC2086
 # shellcheck disable=SC2086
-if encfs "$enc_dir" "$unenc_dir" $options; then :; else
-    echo "encfs failed"
+if encifs "$enc_dir" "$unenc_dir" $options; then :; else
+    echo "encifs failed"
     rmdir -- "$unenc_dir"
     exit 1
 fi

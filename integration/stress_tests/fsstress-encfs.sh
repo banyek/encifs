@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 #
-# Mount an EncFS filesystem in /tmp and run fsstress against it
+# Mount an EnciFS filesystem in /tmp and run fsstress against it
 # in an infinite loop, only exiting on errors.
 #
 # You need to have https://github.com/rfjakob/fuse-xfstests or
@@ -20,13 +20,13 @@ then
 fi
 
 # Backing directory
-DIR=$(mktemp -d /tmp/fsstress-encfs.XXX)
+DIR=$(mktemp -d /tmp/fsstress-encifs.XXX)
 # Mountpoint
 MNT="$DIR.mnt"
 mkdir $MNT
 
 # Mount
-../../build/encfs -f --extpass "echo test" --standard $DIR $MNT &
+../../build/encifs -f --extpass "echo test" --standard $DIR $MNT &
 disown
 
 sleep 0.5
@@ -45,7 +45,7 @@ echo "Starting fsstress loop"
 N=1
 while true
 do
-	# Note: EncFS does not seem to support the FS_IOC_GETFLAGS ioctl that
+	# Note: EnciFS does not seem to support the FS_IOC_GETFLAGS ioctl that
 	# fsstress is using. To get rid of the error messages we set "-f getattr=0"
 	# in all fsstress calls.
 	echo $N

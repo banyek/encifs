@@ -1,8 +1,8 @@
 #include "benchmark/benchmark.h"
 
-#include "encfs/MemoryPool.h"
+#include "encifs/MemoryPool.h"
 
-using namespace encfs;
+using namespace encifs;
 
 static void BM_MemPoolAllocate(benchmark::State& state) {
   while (state.KeepRunning()) {

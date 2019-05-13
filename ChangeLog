@@ -2,10 +2,10 @@ v1.9.5 / 2018-04-27
 ===================
 	* Correct a int/off_t buffer overflow in getSize()
 	* Correct a possible write crash
-	* Correct encfsctl cat and add reverse cat
+	* Correct encifsctl cat and add reverse cat
 	* Add -c & -u cmdline options
 	* Add --noattrcache & --nodatacache cmdline options
-	* Ignore .encfs6.xml file in reverse mode
+	* Ignore .encifs6.xml file in reverse mode
 	* Do not count usage on root path (to avoid resetting the --idle option)
 	* Use stderr instead of stdout for error messages
 	* Add the ability to disable data encryption (absolutely discouraged)
@@ -62,12 +62,12 @@ v1.9 / 2016-09-09
 	* add coverity model for CHECK operation
 	* improve error handling in flush operation
 	* move openssl initialization earlier
-	* fix memory leak in encfsctl showKey command
+	* fix memory leak in encifsctl showKey command
 	* drop unnecessary en translations, for #93
 
 v1.9-rc3 / 2016-09-05
 =====================
-	* don't install libencfs by default
+	* don't install libencifs by default
 	* regenerate po files
 	* remove install targets from libtinyxml2, fixes #203
 	* update gettext install config
@@ -78,7 +78,7 @@ v1.9-rc2 / 2016-08-16
 	* tests: open file with umask 0777
 	* Allow writing when loading a reverse mount config
 	* logging: enable debug log only in verbose mode
-	* Fix incorrect masking in encfsctl export's copyContents
+	* Fix incorrect masking in encifsctl export's copyContents
 	* use utimensat if available
 
 v1.9-rc1 / 2016-05-10
@@ -140,7 +140,7 @@ Sun Nov 12 2013 Valient Gough <vgough@pobox.com>
 
 Wed Oct 2 2013 Valient Gough <vgough@pobox.com>
 	* adds delaymount option which delays initial mount.  Patch by Jeff King.
-	* fixes encfsctl cat command when iv chaining is enabled (issue #132)
+	* fixes encifsctl cat command when iv chaining is enabled (issue #132)
 	* fix to POD documentation
 
 Sun Oct 21 2012 Valient Gough <vgough@pobox.com>
@@ -236,7 +236,7 @@ Sat Aug 23 2008 Valient Gough <vgough@pobox.com>
 	* add BOOST_SYSTEM check
 
 Fri Aug 22 2008 Valient Gough <vgough@pobox.com>
-	* replace raw pointers with vector in EncFSConfig
+	* replace raw pointers with vector in EnciFSConfig
 
 Sun Aug 17 2008 Valient Gough <vgough@pobox.com>
 	* bump version to 1.5
@@ -277,7 +277,7 @@ Thu May 22 2008 Valient Gough <vgough@pobox.com>
 	* remove AM_MKINSTALLDIRS from configure.ac
 
 Sun May 18 2008 Valient Gough <vgough@pobox.com>
-	* add makeKey program and showKey option to encfsctl
+	* add makeKey program and showKey option to encifsctl
 	* replace C header includes with C++ versions
 
 Sat May 17 2008 Valient Gough <vgough@pobox.com>
@@ -302,7 +302,7 @@ Sun May 4 2008 Valient Gough <vgough@pobox.com>
 	* ensure boost::filesystem::path is created with native option"
 
 Sat Apr 19 2008 Valient Gough <vgough@pobox.com>
-	* add direct-load method so that encfsctl cat can work with direct
+	* add direct-load method so that encifsctl cat can work with direct
 	  cipher paths
 
 Tue Apr 15 2008 Valient Gough <vgough@pobox.com>
@@ -413,7 +413,7 @@ Sun Dec 30 2007 Valient Gough <vgough@pobox.com>
 	* keep FileNode reference in fuse_file_info, to avoid path lookups in
 	  related ops move context struct to separate file
 	* move globals to filesystem-context scope
-	* fixes to get encfs to compile with libfuse 26 API
+	* fixes to get encifs to compile with libfuse 26 API
 
 Sat Dec 29 2007 Valient Gough <vgough@pobox.com>
 	* remove LinkedOwner, replace with shared_ptr
@@ -429,7 +429,7 @@ Tue Oct 9 2007 Valient Gough <vgough@pobox.com>
 
 Mon Mar 19 2007 Valient Gough <vgough@pobox.com>
 	* reverse encryption support by Keary Griffin
-	  Adds --reverse option to encfs which causes encfs to produce encrypted
+	  Adds --reverse option to encifs which causes encifs to produce encrypted
 	  filesystem on-demand, rather then unencrypted.
 
 Wed Mar 14 2007 Valient Gough <vgough@pobox.com>
@@ -446,7 +446,7 @@ Mon Feb 12 2007 Valient Gough <vgough@pobox.com>
 Thu Jan 11 2007 Valient Gough <vgough@pobox.com>
 	* make sure cache is correctly cleared in case of failure
 	  Fixes bug reported by Liraz @ sourceforge.
-	  Bug: 1633662  Encfs failing to verify block HMAC
+	  Bug: 1633662  Encifs failing to verify block HMAC
 
 Tue Jul 25 2006 Valient Gough <vgough@pobox.com>
 	* add workaround for group permission problem in 'public' mode
@@ -464,7 +464,7 @@ Sun Jul 16 2006 Valient Gough <vgough@pobox.com>
 	  This wasn't a problem until recent improvements in gcc.
 
 Sat Apr 1 2006 Valient Gough <vgough@pobox.com>
-	* track list of new FUSE callbacks which are not implemented in encfs
+	* track list of new FUSE callbacks which are not implemented in encifs
 	* bump version to 1.3.1
 
 Tue Mar 28 2006 Valient Gough <vgough@pobox.com>
@@ -473,15 +473,15 @@ Tue Mar 28 2006 Valient Gough <vgough@pobox.com>
 Wed Mar 8 2006 Valient Gough <vgough@pobox.com>
 	* tagged v1.3
 	* cleanup logging output and close stderr on successful startup of
-	  daemon.  Encfs was keeping open stderr after startup, so close it
-	  during encfs_init.
+	  daemon.  Encifs was keeping open stderr after startup, so close it
+	  during encifs_init.
 	* fix visibility of .dot files when Null filename encryption selected.
 	  Reported by Andrew Schretter, and patched in January, but I forgot to
 	  commit fix.
 	* minor fixup to int64 cast after patch import
 
 Mon Mar 6 2006 Valient Gough <vgough@pobox.com>
-	* reorder encfs man page place more useful flags first in options list
+	* reorder encifs man page place more useful flags first in options list
 	* update version, check for fuse 2.5
 
 Mon Mar 6 2006 Csaba Henk <csaba.henk@creo.hu>
@@ -503,10 +503,10 @@ Wed Nov 9 2005 Valient Gough <vgough@pobox.com>
 	  testing.
 
 Mon Sep 12 2005 Valient Gough <vgough@pobox.com>
-	* have encfssh make the mountpoint only user readable
+	* have encifssh make the mountpoint only user readable
 
 Sun Sep 11 2005 Valient Gough <vgough@pobox.com>
-	* add encfssh script
+	* add encifssh script
 	  Script to mount, spawn shell in mount, and unmount when shell exits.
 	  Contributed by David Rosenstrauch
 
@@ -519,20 +519,20 @@ Wed Aug 24 2005 Valient Gough <vgough@pobox.com>
 	* raw dir may not be a subdirectory of mount point
 	  Fixes issue reported by paulgfx - if raw directory was a subdirectory
 	  of the mount point, this would cause infinite recursion (because each
-	  request by encfs on the raw data would be translated into another
-	  encfs request by the kernel).
+	  request by encifs on the raw data would be translated into another
+	  encifs request by the kernel).
 	* moves the directory creation until the other tests have been made, to
 	  avoid creating directories unless all sanity checks pass.
 
 Tue Aug 23 2005 Valient Gough <vgough@pobox.com>
 	* avoid trying to decipher impossibly small filenames
-	  Bug reported by paulgfx - if a bogus file was placed in the encfs raw
+	  Bug reported by paulgfx - if a bogus file was placed in the encifs raw
 	  directory with a name that was too small to be a valid encrypted
-	  name, it could cause encfs to segfault.  Such files are now skipped.
+	  name, it could cause encifs to segfault.  Such files are now skipped.
 
 Sat Aug 20 2005 Valient Gough <vgough@pobox.com>
 	* add support for static build
-	  In static builds, the linker skips objects from the libencfs library
+	  In static builds, the linker skips objects from the libencifs library
 	  which are never directly referenced.  This breaks all encoding and
 	  encryption modules, because they are dynamically registered.  The
 	  workaround is to explicitly add references in the library in the
@@ -542,8 +542,8 @@ Wed Aug 17 2005 Valient Gough <vgough@pobox.com>
 	* bump version to 1.2.4
 	* refactor small amount of error code
 	* add environment override for config file location
-	  If the environment variable 'ENCFS5_CONFIG' is set, then it will be
-	  used as the location for the encfs configuration file.  Otherwise,
+	  If the environment variable 'ENCIFS5_CONFIG' is set, then it will be
+	  used as the location for the encifs configuration file.  Otherwise,
 	  the normal search will be done, by searching the specified root
 	  directory for an appropriate config file.
 
@@ -553,7 +553,7 @@ Fri Aug 5 2005 jjhellst@gmail.com
 	  initRootInfo function that calls checkDir and initFS.  This removes
 	  some of the redundancy in cmd_* handlers.
 	  The creation of destDir in cmd_export is also moved to a later stage,
-	  so that if encfs volume couldn't be initialized, the destination
+	  so that if encifs volume couldn't be initialized, the destination
 	  directory is not created.
 
 Fri Jul 29 2005 Valient Gough <vgough@pobox.com>
@@ -564,7 +564,7 @@ Wed Jul 27 2005 Valient Gough <vgough@pobox.com>
 	* fix up export patch and refactor output code
 
 Sun Jul 24 2005 Valient Gough <vgough@pobox.com>
-	* encfsctl export command patch from Janne Hellsten
+	* encifsctl export command patch from Janne Hellsten
 	  This command will export the entire filesystem.
 
 	* move userAllowCreate to userAllowMkdir and make public
@@ -603,7 +603,7 @@ Mon Jul 4 2005 Valient Gough <vgough@pobox.com>
 	to introduce (or exacerbate?) a race condition in the read path.  Until
 	I have time to track it down, the safest action seems to be to
 	synchronize reads..
-	* add 'cat' command to encfsctl
+	* add 'cat' command to encifsctl
 	Allows printing out the contents of a file without having to mount the
 	filesystem.
 
@@ -634,16 +634,16 @@ Sat May 21 2005 Valient Gough <vgough@pobox.com>
 
 Tue May 17 2005  Valient Gough <vgough@pobox.com>
 	* fix idle monitor thread
-	  Idle monitor wasn't working in encfs 1.2.x - reported by Patrick
-	  Skerrett on encfs-users mailing list.  Problem was that idle thread
+	  Idle monitor wasn't working in encifs 1.2.x - reported by Patrick
+	  Skerrett on encifs-users mailing list.  Problem was that idle thread
 	  needs to be setup after daemon() is called by libfuse, otherwise
 	  thread was being killed.
-	* increment libencfs version number to 1:1:0
+	* increment libencifs version number to 1:1:0
 
 Fri May 13 2005  Valient Gough <vgough@pobox.com>
 	* add use_ino by default, new flag --no-default-flags
 	  The fuse flags use_ino is now specified by default, since it
-	  shouldn't cost anything.  Encfs now has a documented flag
+	  shouldn't cost anything.  Encifs now has a documented flag
 	  --no-default-flags which can be used to turn off all default fuse
 	  flags.
 	* add big warning message for external IV chaining
@@ -662,7 +662,7 @@ Fri May  6 2005  Valient Gough <vgough@pobox.com>
 
 Sun May  1 2005  Valient Gough <vgough@pobox.com>
 	* make FUSE default_permissions flag on by default
-	* add an 'encode' command in encfsctl
+	* add an 'encode' command in encifsctl
 
 Wed Apr 20 2005  Valient Gough <vgough@pobox.com>
 	* bump version number to 1.2.1-4
@@ -680,9 +680,9 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	* import latest rosetta translation updates
 
 2005-04-18  Valient Gough <vgough@pobox.com>
-	* add "--public" mount option when encfs is run as root, to act as a
+	* add "--public" mount option when encifs is run as root, to act as a
 	  standard multi-user filesystem.  Based on patch by Sascha Demetrio.
-	* enable shared library build.  Encfs and encfsctl now link to libencfs
+	* enable shared library build.  Encifs and encifsctl now link to libencifs
 	  shared library.
 
 2005-04-15  Valient Gough <vgough@pobox.com>
@@ -692,7 +692,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	  upon it).
 
 2005-04-08  Valient Gough <vgough@pobox.com>
-	* build libencfs shared library - 
+	* build libencifs shared library - 
 
 2005-04-01  Valient Gough <vgough@pobox.com>
 	* autosprintf fixes - patch from Andreas Jochens
@@ -728,7 +728,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 2005-02-05  Valient Gough <vgough@pobox.com>
 	* convert to fuse 2.2 api, dropping support for older versions
 
-	* change encfs version to 1.2
+	* change encifs version to 1.2
 
 	* add inode number pass-thru support, allowing inode numbers to be the
 	  same as the underlying filesystem.  This makes it so that hard links
@@ -811,7 +811,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	* some fixes to build on RH7.3
 
 	* NLS updates
-	* add BUILD_NLS conditional to try and make encfs buildable without
+	* add BUILD_NLS conditional to try and make encifs buildable without
 	  gettext
 
 2004-12-28  gettextize  <bug-gnu-gettext@gnu.org>
@@ -829,8 +829,8 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	    add files
 
 	* Makefile.in.in:
-	    use encfs.pot as the final (sorted) pot.
-	    encfs-raw.pot is the unsorted data
+	    use encifs.pot as the final (sorted) pot.
+	    encifs-raw.pot is the unsorted data
 
 	* sort translation strings by importance
 
@@ -846,7 +846,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	* add -H option to get fuse_mount usage message
 
 2004-11-08  Valient Gough <vgough@pobox.com>
-	* check if fuse_main returns integer.  Should allow encfs to build with
+	* check if fuse_main returns integer.  Should allow encifs to build with
 	  older versions of fuse
 
 	* fix fuse argument separation for recent versions of fuse (fix
@@ -998,10 +998,10 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 
 	* Fix bug reported by Jens Arm -- change CipherFileIO and MACFileIO to
 	  only adjust size for regular files (not directories, etc).   This bug
-	  prevented EncFS from being used on top of an XFS filesystem..
+	  prevented EnciFS from being used on top of an XFS filesystem..
 
 2004-05-23  Valient Gough <vgough@pobox.com>
-	* add support for decoding a list of names from stdin in encfsctl.
+	* add support for decoding a list of names from stdin in encifsctl.
 
 2004-05-22  Valient Gough <vgough@pobox.com>
 	* fix up includes so that extra dependency path discovered in configure
@@ -1027,10 +1027,10 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 
 	* New V5 configuration subversion - 20040518.
 
-	* add try/catch blocks around most operations in encfs.cpp, as uncaught
+	* add try/catch blocks around most operations in encifs.cpp, as uncaught
 	  exceptions will cause fuse library to exit.
 
-	* add decode command to encfsctl to decode an encrypted path name.
+	* add decode command to encifsctl to decode an encrypted path name.
 
 	* fix memory bounds error in MACFileIO
 
@@ -1038,7 +1038,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	* bump release to 4
 	* TAG: v1.1-4
 
-	* add showcruft command to encfsctl which displays undecodable filenames
+	* add showcruft command to encifsctl which displays undecodable filenames
 
 	* make recursive rename two stages to avoid trying to rename files more
 	  then once.
@@ -1058,7 +1058,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	* allow CipherV3 to be built even if newer SSL interfaces are not
 	  available.
 
-	* add full V3 support (filesystems created by EncFS 0.2 - 0.6)
+	* add full V3 support (filesystems created by EnciFS 0.2 - 0.6)
 
 2004-05-13  Valient Gough <vgough@pobox.com>
 	* documentation updates
@@ -1081,7 +1081,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	  library header from CVS.
 
 	* changed open file caching to be based on plaintext name rather then
-	  encrypted name.  FUSE passes the plaintext names to EncFS for
+	  encrypted name.  FUSE passes the plaintext names to EnciFS for
 	  processing, so rather then having to encrypt them each time, use the
 	  plaintext name for lookup in the cache.  This makes it more likely to
 	  have plaintext names sitting around in memory, so I've tried to have
@@ -1111,7 +1111,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	  per-directory IV data somewhere (or like CVS, store IV data in
 	  strange parts of file headers), but I found I could do much better
 	  more simply by chaining the initialization vectors during a path
-	  encode/decode since EncFS always knows the full path of the file
+	  encode/decode since EnciFS always knows the full path of the file
 	  being accessed.  This adds 64 bits of path-dependent initialization
 	  vector data without any storage overhead.
 
@@ -1156,7 +1156,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	  block cannot be modified without being detected.
 
 2004-04-14  Valient Gough <vgough@pobox.com>
-	* name encoding output for encfsctl and added creator tag to V5 config
+	* name encoding output for encifsctl and added creator tag to V5 config
 	  file.
 
 	* V5 configuration, now supports block mode filename encryption.
@@ -1177,7 +1177,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 
 	* Move code from FileNode to FileIO layer to clean up layer separation.
 
-	* Support for version 3 filesystems (created by EncFS 0.x, supported by
+	* Support for version 3 filesystems (created by EnciFS 0.x, supported by
 	  0.x and 1.0.x) has been dropped. 
 
 2004-04-11  Valient Gough <vgough@pobox.com>
@@ -1199,7 +1199,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	* FileUtils contains functions for loading / creating filesystem
 	  configuration.
 
-	* First try implementation of an 'ls' command in encfsctl.
+	* First try implementation of an 'ls' command in encifsctl.
 
 2004-04-08  Valient Gough <vgough@pobox.com>
 	* add support for truncate call with new size > old size.
@@ -1228,7 +1228,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	  EVP cipher context lifetime.
 
 	* Optimize read and write to go direct to buffer whenever possible.
-	  This is the fastest encfs ever.
+	  This is the fastest encifs ever.
 
 	* Don't remove files that are not automatically generated.  Caused a
 	  distribution build problem when the admin directory was updated.
@@ -1247,7 +1247,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	* Update admin code.
 
 2004-03-21  Valient Gough <vgough@pobox.com>
-	* encfsctl.pod: fix comment
+	* encifsctl.pod: fix comment
 
 2004-03-19  Valient Gough <vgough@pobox.com>
 	* update README with better description of encryption details
@@ -1286,26 +1286,26 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	* makedist2.sh.in: remove suse9 tag
 	* minor fixes to dist creation and spec build
 
-	* add encfsctl man page
+	* add encifsctl man page
 
 	* manpage spelling fixes and install manpage to proper directory
 
 	* make release builds mostly automated
 
-	* add encfs.1 to distribution list so that it will be preprocessed and
+	* add encifs.1 to distribution list so that it will be preprocessed and
 	  include in the distribution so that end-users don't need to have
 	  pod2man installed to get the man page.
 
 	* make man page build conditional on finding pod2man program
 
-	* add encfs man page, clean up encfs usage output
+	* add encifs man page, clean up encifs usage output
 
 2004-03-13  Valient Gough <vgough@pobox.com>
 	* bump version to 1.0.2
 
 	* use pkg-config to check for OpenSSL and RLog build settings
 
-	* add support for '--' argument to encfs to pass arbitrary options to
+	* add support for '--' argument to encifs to pass arbitrary options to
 	  FUSE / FuserMount.
 
 2004-03-02  Valient Gough <vgough@pobox.com>
@@ -1343,7 +1343,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	    minor change to error message
 	* main.cpp, FileUtils.cpp:
 	    include unistd.h
-	* encfsctl.cpp:
+	* encifsctl.cpp:
 	    fix initializer for struct array
 	* SSL_Cipher.cpp:
 	    make AES and blowfish support optional based
@@ -1360,7 +1360,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	* change to use 32 bit checksum for key storage in SSL_Cipher.
 
 2004-02-19  Valient Gough <vgough@pobox.com>
-	* Remove libencfs shared library.  Simplifies installation.
+	* Remove libencifs shared library.  Simplifies installation.
 
 	* add "info" channel for logging of operations which can be activated
 	  with "-v" flag.
@@ -1368,21 +1368,21 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	* drop remote changes - they are no longer valid on local branch
 
 	* update admin directory.
-	* build shared code as libencfs shared library.
+	* build shared code as libencifs shared library.
 	* other minor cleanup.
 
 	* close substantial memory leak
 
 2004-02-18  Valient Gough <vgough@pobox.com>
-	* implement password change command in encfsctl.
+	* implement password change command in encifsctl.
 	* fix serious bug in SSL_Cipher::readKey
 
-	* fix test program fatal - needed encfs.h include to pick up fuse.h
+	* fix test program fatal - needed encifs.h include to pick up fuse.h
 
-	* implement new .encfs4 version 4 control file for new filesystems.  It
+	* implement new .encifs4 version 4 control file for new filesystems.  It
 	  allows specification of different ciphers, key size and blocksize.
 
-	* Add encfsctl program which can display some information about the
+	* Add encifsctl program which can display some information about the
 	  filesystem.
 
 2004-02-14  Valient Gough <vgough@pobox.com>
@@ -1454,7 +1454,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	* add fsync support if support is detected in FUSE
 
 2003-12-11  Valient Gough <vgough@pobox.com>
-	* initial work in modularizing parts of encfs
+	* initial work in modularizing parts of encifs
 	* compiles, but doesn't work properly yet.
 
 	* Likely memory leak and or file descriptor leak in DirNode / FileNode
@@ -1474,7 +1474,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	    - cleanup of build script problems reported by Duane D.
 
 2003-11-22  Valient Gough <vgough@pobox.com>
-	* change encfs/Makefile.am to not install the stupid test program
+	* change encifs/Makefile.am to not install the stupid test program
 
 2003-11-21  Valient Gough <vgough@pobox.com>
 	* TAG: v0.4
@@ -1509,7 +1509,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 2003-10-13  Valient Gough <vgough@pobox.com>
 	* add basic memory pooling to avoid repeated calls to malloc/free.
 
-	* bug fix - encfs_release was being treated as a 'close', fixed.
+	* bug fix - encifs_release was being treated as a 'close', fixed.
 	* feature - add mutex for threadsafe access to descriptor map
 	* cleanup - simplify changeBase2Inline in base64
 	* cleanup - remove unecessary headers from some modules
@@ -1529,7 +1529,7 @@ Tue Apr 19 2005  Valient Gough <vgough@pobox.com>
 	* fixes so that make dist creates correct file
 	* removed Qt dependency.  Now builds with just stl, openssl, pthread 
 	  libs.
-	* Switched volume key to .encfs3 as filenames are not compatible with
+	* Switched volume key to .encifs3 as filenames are not compatible with
 	  previous version since CRC-16 filename checksum was replaced with a
 	  reduced SHA1 HMAC.
 

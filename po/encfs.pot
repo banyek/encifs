@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: encfs 1.8.1\n"
-"Report-Msgid-Bugs-To: https://translations.launchpad.net/encfs/main/+pots/"
-"encfs\n"
+"Project-Id-Version: encifs 1.8.1\n"
+"Report-Msgid-Bugs-To: https://translations.launchpad.net/encifs/main/+pots/"
+"encifs\n"
 "POT-Creation-Date: 2015-03-29 18:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -56,7 +56,7 @@ msgid "  -- print version number and exit"
 msgstr ""
 
 #, c-format
-msgid "encfsctl version %s"
+msgid "encifsctl version %s"
 msgstr ""
 
 msgid "Usage:\n"
@@ -82,8 +82,8 @@ msgid "Unable to load or parse config file\n"
 msgstr ""
 
 msgid ""
-"A really old EncFS filesystem was found. \n"
-"It is not supported in this EncFS build.\n"
+"A really old EnciFS filesystem was found. \n"
+"It is not supported in this EnciFS build.\n"
 msgstr ""
 
 #, c-format
@@ -126,13 +126,13 @@ msgstr[1] ""
 msgid "Unable to find specified cipher \"%s\"\n"
 msgstr ""
 
-msgid "Enter current Encfs password\n"
+msgid "Enter current Encifs password\n"
 msgstr ""
 
 msgid "Invalid password\n"
 msgstr ""
 
-msgid "Enter new Encfs password\n"
+msgid "Enter new Encifs password\n"
 msgstr ""
 
 msgid "Volume Key successfully updated.\n"
@@ -168,12 +168,12 @@ msgstr ""
 
 #, c-format
 msgid ""
-"Config subversion %i found, but this version of encfs only supports up to "
+"Config subversion %i found, but this version of encifs only supports up to "
 "version %i."
 msgstr ""
 
 msgid ""
-"This version of EncFS doesn't support filesystems created before 2004-08-13"
+"This version of EnciFS doesn't support filesystems created before 2004-08-13"
 msgstr ""
 
 msgid "The following cipher algorithms are available:"
@@ -279,7 +279,7 @@ msgid ""
 "Enable filename to IV header chaining?\n"
 "This makes file data encoding dependent on the complete file path.\n"
 "If a file is renamed, it will not decode sucessfully unless it\n"
-"was renamed by encfs with the proper key.\n"
+"was renamed by encifs with the proper key.\n"
 "If this option is enabled, then hard links will not be supported\n"
 "in the filesystem."
 msgstr ""
@@ -342,7 +342,7 @@ msgid ""
 "enabled.  This option disables the use of hard links on the\n"
 "filesystem. Without hard links, some programs may not work.\n"
 "The programs 'mutt' and 'procmail' are known to fail.  For\n"
-"more information, please see the encfs mailing list.\n"
+"more information, please see the encifs mailing list.\n"
 "If you would like to choose another configuration setting,\n"
 "please press CTRL-C now to abort and start over."
 msgstr ""
@@ -351,7 +351,7 @@ msgid ""
 "Now you will need to enter a password for your filesystem.\n"
 "You will need to remember this password, as there is absolutely\n"
 "no recovery mechanism.  However, the password can be changed\n"
-"later using encfsctl.\n"
+"later using encifsctl.\n"
 "\n"
 msgstr ""
 
@@ -418,7 +418,7 @@ msgstr ""
 msgid "Error creating salt\n"
 msgstr ""
 
-msgid "EncFS Password: "
+msgid "EnciFS Password: "
 msgstr ""
 
 msgid "Zero length password not allowed\n"
@@ -433,10 +433,10 @@ msgstr ""
 msgid "Internal error: failed to exec program"
 msgstr ""
 
-msgid "New Encfs Password: "
+msgid "New Encifs Password: "
 msgstr ""
 
-msgid "Verify Encfs Password: "
+msgid "Verify Encifs Password: "
 msgstr ""
 
 msgid "Passwords did not match, please try again\n"
@@ -476,7 +476,7 @@ msgid "MAC comparison failure, refusing to read"
 msgstr ""
 
 #, c-format
-msgid "Build: encfs version %s"
+msgid "Build: encifs version %s"
 msgstr ""
 
 #, c-format
@@ -493,7 +493,7 @@ msgid ""
 msgstr ""
 
 msgid ""
-"  -v, --verbose\t\tverbose: output encfs debug messages\n"
+"  -v, --verbose\t\tverbose: output encifs debug messages\n"
 "  -i, --idle=MINUTES\tAuto unmount after period of inactivity\n"
 "  --anykey\t\tDo not verify correct key is being used\n"
 "  --forcedecode\t\tdecode data even if an error is detected\n"
@@ -502,7 +502,7 @@ msgstr ""
 
 msgid ""
 "  --public\t\tact as a typical multi-user filesystem\n"
-"\t\t\t(encfs must be run as root)\n"
+"\t\t\t(encifs must be run as root)\n"
 msgstr ""
 
 msgid "  --reverse\t\treverse encryption\n"
@@ -512,15 +512,15 @@ msgid ""
 "  --extpass=program\tUse external program for password prompt\n"
 "\n"
 "Example, to mount at ~/crypt with raw storage in ~/.crypt :\n"
-"    encfs ~/.crypt ~/crypt\n"
+"    encifs ~/.crypt ~/crypt\n"
 "\n"
 msgstr ""
 
-msgid "For more information, see the man page encfs(1)"
+msgid "For more information, see the man page encifs(1)"
 msgstr ""
 
 msgid ""
-"encfs [options] rootDir mountPoint -- [FUSE Mount Options]\n"
+"encifs [options] rootDir mountPoint -- [FUSE Mount Options]\n"
 "valid FUSE Mount Options follow:\n"
 msgstr ""
 
@@ -528,7 +528,7 @@ msgid "option '--public' ignored for non-root user"
 msgstr ""
 
 #, c-format
-msgid "encfs version %s"
+msgid "encifs version %s"
 msgstr ""
 
 msgid "Missing one or more arguments, aborting."

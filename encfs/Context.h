@@ -30,19 +30,19 @@
 #include <string>
 #include <unordered_map>
 
-#include "encfs.h"
+#include "encifs.h"
 
-namespace encfs {
+namespace encifs {
 
 class DirNode;
 class FileNode;
-struct EncFS_Args;
-struct EncFS_Opts;
+struct EnciFS_Args;
+struct EnciFS_Opts;
 
-class EncFS_Context {
+class EnciFS_Context {
  public:
-  EncFS_Context();
-  ~EncFS_Context();
+  EnciFS_Context();
+  ~EnciFS_Context();
 
   std::shared_ptr<FileNode> lookupNode(const char *path);
 
@@ -58,8 +58,8 @@ class EncFS_Context {
   std::shared_ptr<DirNode> getRoot(int *err);
   std::shared_ptr<DirNode> getRoot(int *err, bool skipUsageCount);
 
-  std::shared_ptr<EncFS_Args> args;
-  std::shared_ptr<EncFS_Opts> opts;
+  std::shared_ptr<EnciFS_Args> args;
+  std::shared_ptr<EnciFS_Opts> opts;
   bool publicFilesystem;
 
   // root path to cipher dir
@@ -100,9 +100,9 @@ class EncFS_Context {
   std::unordered_map<uint64_t, std::shared_ptr<FileNode>> fuseFhMap;
 };
 
-int remountFS(EncFS_Context *ctx);
-bool unmountFS(EncFS_Context *ctx);
+int remountFS(EnciFS_Context *ctx);
+bool unmountFS(EnciFS_Context *ctx);
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

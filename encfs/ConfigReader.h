@@ -26,10 +26,10 @@
 
 #include "ConfigVar.h"
 
-namespace encfs {
+namespace encifs {
 
 /*
-    handles Configuration load / store for Encfs filesystems.
+    handles Configuration load / store for Encifs filesystems.
 
     loading existing config file example:
 
@@ -63,6 +63,6 @@ class ConfigReader {
   std::map<std::string, ConfigVar> vars;
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

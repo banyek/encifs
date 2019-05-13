@@ -15,7 +15,7 @@
  * more details.
  */
 
-#include "encfs.h"
+#include "encifs.h"
 
 #include <cerrno>
 #include <cinttypes>
@@ -63,27 +63,27 @@
 using namespace std;
 using namespace std::placeholders;
 
-namespace encfs {
+namespace encifs {
 
 #define GET_FN(ctx, finfo) (ctx)->getNode((void *)(uintptr_t)(finfo)->fh)
 
-static EncFS_Context *context() {
-  return (EncFS_Context *)fuse_get_context()->private_data;
+static EnciFS_Context *context() {
+  return (EnciFS_Context *)fuse_get_context()->private_data;
 }
 
 /**
  * Helper function - determine if the filesystem is read-only
- * Optionally takes a pointer to the EncFS_Context, will get it from FUSE
+ * Optionally takes a pointer to the EnciFS_Context, will get it from FUSE
  * if the argument is NULL.
  */
-static bool isReadOnly(EncFS_Context *ctx) { return ctx->opts->readOnly; }
+static bool isReadOnly(EnciFS_Context *ctx) { return ctx->opts->readOnly; }
 
 // helper function -- apply a functor to a cipher path, given the plain path
 static int withCipherPath(
     const char *opName, const char *path,
-    const function<int(EncFS_Context *, const string &)> &op,
+    const function<int(EnciFS_Context *, const string &)> &op,
     bool passReturnCode = false) {
-  EncFS_Context *ctx = context();
+  EnciFS_Context *ctx = context();
 
   int res = -EIO;
   std::shared_ptr<DirNode> FSRoot = ctx->getRoot(&res);
@@ -104,7 +104,7 @@ static int withCipherPath(
     } else if (!passReturnCode) {
       res = ESUCCESS;
     }
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "withCipherPath: error caught in " << opName << ": "
                 << err.what();
   }
@@ -136,7 +136,7 @@ static void checkCanary(const std::shared_ptr<FileNode> &fnode) {
 static int withFileNode(const char *opName, const char *path,
                         struct fuse_file_info *fi,
                         const function<int(FileNode *)> &op) {
-  EncFS_Context *ctx = context();
+  EnciFS_Context *ctx = context();
 
   int res = -EIO;
   bool skipUsageCount = false;
@@ -185,7 +185,7 @@ static int withFileNode(const char *opName, const char *path,
     if (res < 0) {
       RLOG(DEBUG) << "op: " << opName << " error: " << strerror(-res);
     }
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "withFileNode: error caught in " << opName << ": "
                 << err.what();
   }
@@ -204,7 +204,7 @@ static int withFileNode(const char *opName, const char *path,
 int _do_getattr(FileNode *fnode, struct stat *stbuf) {
   int res = fnode->getAttr(stbuf);
   if (res == ESUCCESS && S_ISLNK(stbuf->st_mode)) {
-    EncFS_Context *ctx = context();
+    EnciFS_Context *ctx = context();
     std::shared_ptr<DirNode> FSRoot = ctx->getRoot(&res);
     if (FSRoot) {
       // determine plaintext link size..  Easiest to read and decrypt..
@@ -228,18 +228,18 @@ int _do_getattr(FileNode *fnode, struct stat *stbuf) {
   return res;
 }
 
-int encfs_getattr(const char *path, struct stat *stbuf) {
+int encifs_getattr(const char *path, struct stat *stbuf) {
   return withFileNode("getattr", path, nullptr, bind(_do_getattr, _1, stbuf));
 }
 
-int encfs_fgetattr(const char *path, struct stat *stbuf,
+int encifs_fgetattr(const char *path, struct stat *stbuf,
                    struct fuse_file_info *fi) {
   return withFileNode("fgetattr", path, fi, bind(_do_getattr, _1, stbuf));
 }
 
-int encfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
+int encifs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
                   off_t offset, struct fuse_file_info *finfo) {
-  EncFS_Context *ctx = context();
+  EnciFS_Context *ctx = context();
 
   //unused parameters
   (void)offset;
@@ -283,14 +283,14 @@ int encfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
     }
 
     return res;
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "Error caught in readdir";
     return -EIO;
   }
 }
 
-int encfs_mknod(const char *path, mode_t mode, dev_t rdev) {
-  EncFS_Context *ctx = context();
+int encifs_mknod(const char *path, mode_t mode, dev_t rdev) {
+  EnciFS_Context *ctx = context();
 
   if (isReadOnly(ctx)) {
     return -EROFS;
@@ -329,15 +329,15 @@ int encfs_mknod(const char *path, mode_t mode, dev_t rdev) {
         res = fnode->mknod(mode, rdev, uid, st.st_gid);
       }
     }
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "error caught in mknod: " << err.what();
   }
   return res;
 }
 
-int encfs_mkdir(const char *path, mode_t mode) {
+int encifs_mkdir(const char *path, mode_t mode) {
   fuse_context *fctx = fuse_get_context();
-  EncFS_Context *ctx = context();
+  EnciFS_Context *ctx = context();
 
   if (isReadOnly(ctx)) {
     return -EROFS;
@@ -369,14 +369,14 @@ int encfs_mkdir(const char *path, mode_t mode) {
         res = FSRoot->mkdir(path, mode, uid, st.st_gid);
       }
     }
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "error caught in mkdir: " << err.what();
   }
   return res;
 }
 
-int encfs_unlink(const char *path) {
-  EncFS_Context *ctx = context();
+int encifs_unlink(const char *path) {
+  EnciFS_Context *ctx = context();
   if (isReadOnly(ctx)) {
     return -EROFS;
   }
@@ -391,25 +391,25 @@ int encfs_unlink(const char *path) {
     // let DirNode handle it atomically so that it can handle race
     // conditions
     res = FSRoot->unlink(path);
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "error caught in unlink: " << err.what();
   }
   return res;
 }
 
-int _do_rmdir(EncFS_Context *, const string &cipherPath) {
+int _do_rmdir(EnciFS_Context *, const string &cipherPath) {
   return rmdir(cipherPath.c_str());
 }
 
-int encfs_rmdir(const char *path) {
-  EncFS_Context *ctx = context();
+int encifs_rmdir(const char *path) {
+  EnciFS_Context *ctx = context();
   if (isReadOnly(ctx)) {
     return -EROFS;
   }
   return withCipherPath("rmdir", path, bind(_do_rmdir, _1, _2));
 }
 
-int _do_readlink(EncFS_Context *ctx, const string &cyName, char *buf,
+int _do_readlink(EnciFS_Context *ctx, const string &cyName, char *buf,
                  size_t size) {
   int res = ESUCCESS;
   std::shared_ptr<DirNode> FSRoot = ctx->getRoot(&res);
@@ -437,7 +437,7 @@ int _do_readlink(EncFS_Context *ctx, const string &cyName, char *buf,
   return -1;
 }
 
-int encfs_readlink(const char *path, char *buf, size_t size) {
+int encifs_readlink(const char *path, char *buf, size_t size) {
   return withCipherPath("readlink", path,
                         bind(_do_readlink, _1, _2, buf, size));
 }
@@ -445,8 +445,8 @@ int encfs_readlink(const char *path, char *buf, size_t size) {
 /**
  * Create a symbolic link pointing to "to" named "from"
  */
-int encfs_symlink(const char *to, const char *from) {
-  EncFS_Context *ctx = context();
+int encifs_symlink(const char *to, const char *from) {
+  EnciFS_Context *ctx = context();
 
   if (isReadOnly(ctx)) {
     return -EROFS;
@@ -505,14 +505,14 @@ int encfs_symlink(const char *to, const char *from) {
     } else {
       res = ESUCCESS;
     }
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "error caught in symlink: " << err.what();
   }
   return res;
 }
 
-int encfs_link(const char *to, const char *from) {
-  EncFS_Context *ctx = context();
+int encifs_link(const char *to, const char *from) {
+  EnciFS_Context *ctx = context();
 
   if (isReadOnly(ctx)) {
     return -EROFS;
@@ -526,14 +526,14 @@ int encfs_link(const char *to, const char *from) {
 
   try {
     res = FSRoot->link(to, from);
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "error caught in link: " << err.what();
   }
   return res;
 }
 
-int encfs_rename(const char *from, const char *to) {
-  EncFS_Context *ctx = context();
+int encifs_rename(const char *from, const char *to) {
+  EnciFS_Context *ctx = context();
 
   if (isReadOnly(ctx)) {
     return -EROFS;
@@ -547,31 +547,31 @@ int encfs_rename(const char *from, const char *to) {
 
   try {
     res = FSRoot->rename(from, to);
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "error caught in rename: " << err.what();
   }
   return res;
 }
 
-int _do_chmod(EncFS_Context *, const string &cipherPath, mode_t mode) {
+int _do_chmod(EnciFS_Context *, const string &cipherPath, mode_t mode) {
   return chmod(cipherPath.c_str(), mode);
 }
 
-int encfs_chmod(const char *path, mode_t mode) {
-  EncFS_Context *ctx = context();
+int encifs_chmod(const char *path, mode_t mode) {
+  EnciFS_Context *ctx = context();
   if (isReadOnly(ctx)) {
     return -EROFS;
   }
   return withCipherPath("chmod", path, bind(_do_chmod, _1, _2, mode));
 }
 
-int _do_chown(EncFS_Context *, const string &cyName, uid_t u, gid_t g) {
+int _do_chown(EnciFS_Context *, const string &cyName, uid_t u, gid_t g) {
   int res = lchown(cyName.c_str(), u, g);
   return (res == -1) ? -errno : ESUCCESS;
 }
 
-int encfs_chown(const char *path, uid_t uid, gid_t gid) {
-  EncFS_Context *ctx = context();
+int encifs_chown(const char *path, uid_t uid, gid_t gid) {
+  EnciFS_Context *ctx = context();
   if (isReadOnly(ctx)) {
     return -EROFS;
   }
@@ -580,36 +580,36 @@ int encfs_chown(const char *path, uid_t uid, gid_t gid) {
 
 int _do_truncate(FileNode *fnode, off_t size) { return fnode->truncate(size); }
 
-int encfs_truncate(const char *path, off_t size) {
-  EncFS_Context *ctx = context();
+int encifs_truncate(const char *path, off_t size) {
+  EnciFS_Context *ctx = context();
   if (isReadOnly(ctx)) {
     return -EROFS;
   }
   return withFileNode("truncate", path, nullptr, bind(_do_truncate, _1, size));
 }
 
-int encfs_ftruncate(const char *path, off_t size, struct fuse_file_info *fi) {
-  EncFS_Context *ctx = context();
+int encifs_ftruncate(const char *path, off_t size, struct fuse_file_info *fi) {
+  EnciFS_Context *ctx = context();
   if (isReadOnly(ctx)) {
     return -EROFS;
   }
   return withFileNode("ftruncate", path, fi, bind(_do_truncate, _1, size));
 }
 
-int _do_utime(EncFS_Context *, const string &cyName, struct utimbuf *buf) {
+int _do_utime(EnciFS_Context *, const string &cyName, struct utimbuf *buf) {
   int res = utime(cyName.c_str(), buf);
   return (res == -1) ? -errno : ESUCCESS;
 }
 
-int encfs_utime(const char *path, struct utimbuf *buf) {
-  EncFS_Context *ctx = context();
+int encifs_utime(const char *path, struct utimbuf *buf) {
+  EnciFS_Context *ctx = context();
   if (isReadOnly(ctx)) {
     return -EROFS;
   }
   return withCipherPath("utime", path, bind(_do_utime, _1, _2, buf));
 }
 
-int _do_utimens(EncFS_Context *, const string &cyName,
+int _do_utimens(EnciFS_Context *, const string &cyName,
                 const struct timespec ts[2]) {
 #ifdef HAVE_UTIMENSAT
   int res = utimensat(AT_FDCWD, cyName.c_str(), ts, AT_SYMLINK_NOFOLLOW);
@@ -625,16 +625,16 @@ int _do_utimens(EncFS_Context *, const string &cyName,
   return (res == -1) ? -errno : ESUCCESS;
 }
 
-int encfs_utimens(const char *path, const struct timespec ts[2]) {
-  EncFS_Context *ctx = context();
+int encifs_utimens(const char *path, const struct timespec ts[2]) {
+  EnciFS_Context *ctx = context();
   if (isReadOnly(ctx)) {
     return -EROFS;
   }
   return withCipherPath("utimens", path, bind(_do_utimens, _1, _2, ts));
 }
 
-int encfs_open(const char *path, struct fuse_file_info *file) {
-  EncFS_Context *ctx = context();
+int encifs_open(const char *path, struct fuse_file_info *file) {
+  EnciFS_Context *ctx = context();
 
   if (isReadOnly(ctx) &&
       (((file->flags & O_WRONLY) != 0) || ((file->flags & O_RDWR) != 0))) {
@@ -652,7 +652,7 @@ int encfs_open(const char *path, struct fuse_file_info *file) {
         FSRoot->openNode(path, "open", file->flags, &res);
 
     if (fnode) {
-      VLOG(1) << "encfs_open for " << fnode->cipherName() << ", flags "
+      VLOG(1) << "encifs_open for " << fnode->cipherName() << ", flags "
               << file->flags;
 
       if (res >= 0) {
@@ -661,20 +661,20 @@ int encfs_open(const char *path, struct fuse_file_info *file) {
         res = ESUCCESS;
       }
     }
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "error caught in open: " << err.what();
   }
 
   return res;
 }
 
-int encfs_create(const char *path, mode_t mode, struct fuse_file_info *file) {
-  int res = encfs_mknod(path, mode, 0);
+int encifs_create(const char *path, mode_t mode, struct fuse_file_info *file) {
+  int res = encifs_mknod(path, mode, 0);
   if (res != 0) {
     return res;
   }
 
-  return encfs_open(path, file);
+  return encifs_open(path, file);
 }
 
 int _do_flush(FileNode *fnode) {
@@ -699,7 +699,7 @@ int _do_flush(FileNode *fnode) {
 }
 
 // Called on each close() of a file descriptor
-int encfs_flush(const char *path, struct fuse_file_info *fi) {
+int encifs_flush(const char *path, struct fuse_file_info *fi) {
   return withFileNode("flush", path, fi, bind(_do_flush, _1));
 }
 
@@ -708,14 +708,14 @@ Note: This is advisory -- it might benefit us to keep file nodes around for a
 bit after they are released just in case they are reopened soon.  But that
 requires a cache layer.
  */
-int encfs_release(const char *path, struct fuse_file_info *finfo) {
-  EncFS_Context *ctx = context();
+int encifs_release(const char *path, struct fuse_file_info *finfo) {
+  EnciFS_Context *ctx = context();
 
   try {
     auto fnode = ctx->lookupFuseFh(finfo->fh);
     ctx->eraseNode(path, fnode);
     return ESUCCESS;
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "error caught in release: " << err.what();
     return -EIO;
   }
@@ -725,7 +725,7 @@ ssize_t _do_read(FileNode *fnode, unsigned char *ptr, size_t size, off_t off) {
   return fnode->read(off, ptr, size);
 }
 
-int encfs_read(const char *path, char *buf, size_t size, off_t offset,
+int encifs_read(const char *path, char *buf, size_t size, off_t offset,
                struct fuse_file_info *file) {
   // Unfortunately we have to convert from ssize_t (pread) to int (fuse), so
   // let's check this will be OK
@@ -740,8 +740,8 @@ int _do_fsync(FileNode *fnode, int dataSync) {
   return fnode->sync(dataSync != 0);
 }
 
-int encfs_fsync(const char *path, int dataSync, struct fuse_file_info *file) {
-  EncFS_Context *ctx = context();
+int encifs_fsync(const char *path, int dataSync, struct fuse_file_info *file) {
+  EnciFS_Context *ctx = context();
   if (isReadOnly(ctx)) {
     return -EROFS;
   }
@@ -753,14 +753,14 @@ ssize_t _do_write(FileNode *fnode, unsigned char *ptr, size_t size,
   return fnode->write(offset, ptr, size);
 }
 
-int encfs_write(const char *path, const char *buf, size_t size, off_t offset,
+int encifs_write(const char *path, const char *buf, size_t size, off_t offset,
                 struct fuse_file_info *file) {
   // Unfortunately we have to convert from ssize_t (pwrite) to int (fuse), so
   // let's check this will be OK
   if (size > std::numeric_limits<int>::max()) {
     size = std::numeric_limits<int>::max();
   }
-  EncFS_Context *ctx = context();
+  EnciFS_Context *ctx = context();
   if (isReadOnly(ctx)) {
     return -EROFS;
   }
@@ -768,9 +768,9 @@ int encfs_write(const char *path, const char *buf, size_t size, off_t offset,
                       bind(_do_write, _1, (unsigned char *)buf, size, offset));
 }
 
-// statfs works even if encfs is detached..
-int encfs_statfs(const char *path, struct statvfs *st) {
-  EncFS_Context *ctx = context();
+// statfs works even if encifs is detached..
+int encifs_statfs(const char *path, struct statvfs *st) {
+  EnciFS_Context *ctx = context();
 
   int res = -EIO;
   try {
@@ -787,7 +787,7 @@ int encfs_statfs(const char *path, struct statvfs *st) {
     if (res == -1) {
       res = -errno;
     }
-  } catch (encfs::Error &err) {
+  } catch (encifs::Error &err) {
     RLOG(ERROR) << "error caught in statfs: " << err.what();
   }
   return res;
@@ -796,14 +796,14 @@ int encfs_statfs(const char *path, struct statvfs *st) {
 #ifdef HAVE_XATTR
 
 #ifdef XATTR_ADD_OPT
-int _do_setxattr(EncFS_Context *, const string &cyName, const char *name,
+int _do_setxattr(EnciFS_Context *, const string &cyName, const char *name,
                  const char *value, size_t size, uint32_t pos) {
   int options = XATTR_NOFOLLOW;
   return ::setxattr(cyName.c_str(), name, value, size, pos, options);
 }
-int encfs_setxattr(const char *path, const char *name, const char *value,
+int encifs_setxattr(const char *path, const char *name, const char *value,
                    size_t size, int flags, uint32_t position) {
-  EncFS_Context *ctx = context();
+  EnciFS_Context *ctx = context();
   if (isReadOnly(ctx)) {
     return -EROFS;
   }
@@ -812,13 +812,13 @@ int encfs_setxattr(const char *path, const char *name, const char *value,
                                                value, size, position));
 }
 #else
-int _do_setxattr(EncFS_Context *, const string &cyName, const char *name,
+int _do_setxattr(EnciFS_Context *, const string &cyName, const char *name,
                  const char *value, size_t size, int flags) {
   return ::lsetxattr(cyName.c_str(), name, value, size, flags);
 }
-int encfs_setxattr(const char *path, const char *name, const char *value,
+int encifs_setxattr(const char *path, const char *name, const char *value,
                    size_t size, int flags) {
-  EncFS_Context *ctx = context();
+  EnciFS_Context *ctx = context();
   if (isReadOnly(ctx)) {
     return -EROFS;
   }
@@ -828,23 +828,23 @@ int encfs_setxattr(const char *path, const char *name, const char *value,
 #endif
 
 #ifdef XATTR_ADD_OPT
-int _do_getxattr(EncFS_Context *, const string &cyName, const char *name,
+int _do_getxattr(EnciFS_Context *, const string &cyName, const char *name,
                  void *value, size_t size, uint32_t pos) {
   int options = XATTR_NOFOLLOW;
   return ::getxattr(cyName.c_str(), name, value, size, pos, options);
 }
-int encfs_getxattr(const char *path, const char *name, char *value, size_t size,
+int encifs_getxattr(const char *path, const char *name, char *value, size_t size,
                    uint32_t position) {
   return withCipherPath(
       "getxattr", path,
       bind(_do_getxattr, _1, _2, name, (void *)value, size, position), true);
 }
 #else
-int _do_getxattr(EncFS_Context *, const string &cyName, const char *name,
+int _do_getxattr(EnciFS_Context *, const string &cyName, const char *name,
                  void *value, size_t size) {
   return ::lgetxattr(cyName.c_str(), name, value, size);
 }
-int encfs_getxattr(const char *path, const char *name, char *value,
+int encifs_getxattr(const char *path, const char *name, char *value,
                    size_t size) {
   return withCipherPath("getxattr", path,
                         bind(_do_getxattr, _1, _2, name, (void *)value, size),
@@ -852,7 +852,7 @@ int encfs_getxattr(const char *path, const char *name, char *value,
 }
 #endif
 
-int _do_listxattr(EncFS_Context *, const string &cyName, char *list,
+int _do_listxattr(EnciFS_Context *, const string &cyName, char *list,
                   size_t size) {
 #ifdef XATTR_ADD_OPT
   int options = XATTR_NOFOLLOW;
@@ -863,12 +863,12 @@ int _do_listxattr(EncFS_Context *, const string &cyName, char *list,
   return (res == -1) ? -errno : res;
 }
 
-int encfs_listxattr(const char *path, char *list, size_t size) {
+int encifs_listxattr(const char *path, char *list, size_t size) {
   return withCipherPath("listxattr", path,
                         bind(_do_listxattr, _1, _2, list, size), true);
 }
 
-int _do_removexattr(EncFS_Context *, const string &cyName, const char *name) {
+int _do_removexattr(EnciFS_Context *, const string &cyName, const char *name) {
 #ifdef XATTR_ADD_OPT
   int options = XATTR_NOFOLLOW;
   int res = ::removexattr(cyName.c_str(), name, options);
@@ -878,8 +878,8 @@ int _do_removexattr(EncFS_Context *, const string &cyName, const char *name) {
   return (res == -1) ? -errno : res;
 }
 
-int encfs_removexattr(const char *path, const char *name) {
-  EncFS_Context *ctx = context();
+int encifs_removexattr(const char *path, const char *name) {
+  EnciFS_Context *ctx = context();
   if (isReadOnly(ctx)) {
     return -EROFS;
   }
@@ -890,4 +890,4 @@ int encfs_removexattr(const char *path, const char *name) {
 
 #endif  // HAVE_XATTR
 
-}  // namespace encfs
+}  // namespace encifs

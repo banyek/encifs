@@ -1,13 +1,13 @@
-# Arabic translation for encfs
+# Arabic translation for encifs
 # Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
-# This file is distributed under the same license as the encfs package.
+# This file is distributed under the same license as the encifs package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: encfs\n"
-"Report-Msgid-Bugs-To: https://translations.launchpad.net/encfs/main/+pots/"
-"encfs\n"
+"Project-Id-Version: encifs\n"
+"Report-Msgid-Bugs-To: https://translations.launchpad.net/encifs/main/+pots/"
+"encifs\n"
 "POT-Creation-Date: 2015-03-29 18:22+0200\n"
 "PO-Revision-Date: 2008-02-27 11:55+0000\n"
 "Last-Translator: Anas Husseini <anas_h_34@hotmail.com>\n"
@@ -67,22 +67,22 @@ msgid ""
 "  --extpass=program\tUse external program for password prompt\n"
 "\n"
 "Example, to mount at ~/crypt with raw storage in ~/.crypt :\n"
-"    encfs ~/.crypt ~/crypt\n"
+"    encifs ~/.crypt ~/crypt\n"
 "\n"
 msgstr ""
 
 msgid ""
 "  --public\t\tact as a typical multi-user filesystem\n"
-"\t\t\t(encfs must be run as root)\n"
+"\t\t\t(encifs must be run as root)\n"
 msgstr ""
 "  --public\t\tيتصرف كأنه نظام ملفات نموذجي متعدد المستخدمين\n"
-"\t\ttab](يجب تشغيل encfs كجذر)\n"
+"\t\ttab](يجب تشغيل encifs كجذر)\n"
 
 msgid "  --reverse\t\treverse encryption\n"
 msgstr "  --reverse\t\tتشفير عكسي\n"
 
 msgid ""
-"  -v, --verbose\t\tverbose: output encfs debug messages\n"
+"  -v, --verbose\t\tverbose: output encifs debug messages\n"
 "  -i, --idle=MINUTES\tAuto unmount after period of inactivity\n"
 "  --anykey\t\tDo not verify correct key is being used\n"
 "  --forcedecode\t\tdecode data even if an error is detected\n"
@@ -124,11 +124,11 @@ msgid "-------------------------- WARNING --------------------------\n"
 msgstr "-------------------------- تحذير --------------------------\n"
 
 msgid ""
-"A really old EncFS filesystem was found. \n"
-"It is not supported in this EncFS build.\n"
+"A really old EnciFS filesystem was found. \n"
+"It is not supported in this EnciFS build.\n"
 msgstr ""
-"نظام ملفات EncFS هذا قديم جدا. \n"
-"و هو غير مدعوم في هذه الإنشاءة من EncFS.\n"
+"نظام ملفات EnciFS هذا قديم جدا. \n"
+"و هو غير مدعوم في هذه الإنشاءة من EnciFS.\n"
 
 msgid ""
 "Add random bytes to each block header?\n"
@@ -158,8 +158,8 @@ msgid "Block Size: %i bytes, including %i byte MAC header"
 msgstr "حجم الكتلة: %i بايت متضمنة %i بايت ترويسة MAC"
 
 #, c-format
-msgid "Build: encfs version %s"
-msgstr "الإنشاءة: encfs الإصدارة %s"
+msgid "Build: encifs version %s"
+msgstr "الإنشاءة: encifs الإصدارة %s"
 
 msgid ""
 "Common Options:\n"
@@ -172,10 +172,10 @@ msgstr ""
 
 #, c-format
 msgid ""
-"Config subversion %i found, but this version of encfs only supports up to "
+"Config subversion %i found, but this version of encifs only supports up to "
 "version %i."
 msgstr ""
-"وجدت تضبيطات من الإصدارة الفرعية %i إلا أن هذه الإصدارة من encfs تدعم فقط "
+"وجدت تضبيطات من الإصدارة الفرعية %i إلا أن هذه الإصدارة من encifs تدعم فقط "
 "الإصدارات حتى %i."
 
 msgid ""
@@ -217,7 +217,7 @@ msgid ""
 "Enable filename to IV header chaining?\n"
 "This makes file data encoding dependent on the complete file path.\n"
 "If a file is renamed, it will not decode sucessfully unless it\n"
-"was renamed by encfs with the proper key.\n"
+"was renamed by encifs with the proper key.\n"
 "If this option is enabled, then hard links will not be supported\n"
 "in the filesystem."
 msgstr ""
@@ -229,14 +229,14 @@ msgid ""
 "which rely on block-aligned file io for performance."
 msgstr ""
 
-msgid "EncFS Password: "
-msgstr "كلمة مرور EncFS: "
+msgid "EnciFS Password: "
+msgstr "كلمة مرور EnciFS: "
 
-msgid "Enter current Encfs password\n"
-msgstr "أدخل كلمة مرور EncFS الحالية\n"
+msgid "Enter current Encifs password\n"
+msgstr "أدخل كلمة مرور EnciFS الحالية\n"
 
-msgid "Enter new Encfs password\n"
-msgstr "أدخل كلمة مرور EncFS الجديدة\n"
+msgid "Enter new Encifs password\n"
+msgstr "أدخل كلمة مرور EnciFS الجديدة\n"
 
 msgid "Enter the number corresponding to your choice: "
 msgstr "أدخل الرقم المقابل لاختيارك: "
@@ -288,8 +288,8 @@ msgstr "أيماء الملفات مرمزة في طور سَلسلة متجها
 msgid "Filesystem cipher: \"%s\", version %i:%i:%i"
 msgstr "خوارزمية تعمية نظام الملفات: \"%s\" الإصدارة %i:%i:%i"
 
-msgid "For more information, see the man page encfs(1)"
-msgstr "لمزيد من المعلومات. راجع صفحة دليل encfs(1)"
+msgid "For more information, see the man page encifs(1)"
+msgstr "لمزيد من المعلومات. راجع صفحة دليل encifs(1)"
 
 #, c-format
 msgid "Found %i invalid file."
@@ -357,8 +357,8 @@ msgstr "يحب ضبط برتامج كلمة السر عند استخدام ال�
 msgid "Name coding interface not supported"
 msgstr "واجهة ترميز الأسماء غير مدعومة."
 
-msgid "New Encfs Password: "
-msgstr "كلمة مرور EncFS الجديدة: "
+msgid "New Encifs Password: "
+msgstr "كلمة مرور EnciFS الجديدة: "
 
 msgid ""
 "Note: requested single-threaded mode, but an idle\n"
@@ -371,13 +371,13 @@ msgid ""
 "Now you will need to enter a password for your filesystem.\n"
 "You will need to remember this password, as there is absolutely\n"
 "no recovery mechanism.  However, the password can be changed\n"
-"later using encfsctl.\n"
+"later using encifsctl.\n"
 "\n"
 msgstr ""
 "ينبغي عليك الآن إدخال كلمة مرور لنظام الملفات.\n"
 "سيكون عليك تذكر كلمة المرور حيث لا توجد أي\n"
 "وسيلة لاستعادة المعمى، لكن سيكون بإمكانك تغيير\n"
-"كلمة المرور في أي وقت لاحقا باستخدام encfsctl.\n"
+"كلمة المرور في أي وقت لاحقا باستخدام encifsctl.\n"
 "\n"
 
 #, fuzzy
@@ -463,7 +463,7 @@ msgid ""
 "enabled.  This option disables the use of hard links on the\n"
 "filesystem. Without hard links, some programs may not work.\n"
 "The programs 'mutt' and 'procmail' are known to fail.  For\n"
-"more information, please see the encfs mailing list.\n"
+"more information, please see the encifs mailing list.\n"
 "If you would like to choose another configuration setting,\n"
 "please press CTRL-C now to abort and start over."
 msgstr ""
@@ -471,7 +471,7 @@ msgstr ""
 "يعطل هذا الخيار استعمال الروابط الصلبة في نظام الملفات.\n"
 "بعض البرمجيات قد لا تعمل في غياب الروابط الصلبة.\n"
 "مثل، برمجيتا mutt و procmail معروف عنهما هذا.\n"
-"لمزيد من المعلومات طالع قائمة encfs البريدية.\n"
+"لمزيد من المعلومات طالع قائمة encifs البريدية.\n"
 "إن كنت تريد تغيير أي من خيارات التضبيطات\n"
 "فاضغط CTRL-C الآن لتجهض هذا و تبدأ من جديد."
 
@@ -494,8 +494,8 @@ msgid "The requested filename coding interface is not available\n"
 msgstr "واجهة ترميز أسماء الملفات المطلوبة غير متاحة\n"
 
 msgid ""
-"This version of EncFS doesn't support filesystems created before 2004-08-13"
-msgstr "هذه النسخة من EncFS لا تدعم أنظمة الملفات المنشأة قبل 13-08-2004"
+"This version of EnciFS doesn't support filesystems created before 2004-08-13"
+msgstr "هذه النسخة من EnciFS لا تدعم أنظمة الملفات المنشأة قبل 13-08-2004"
 
 msgid "Unable to create directory: "
 msgstr "تعذّر إنشاء دليل: "
@@ -552,8 +552,8 @@ msgstr "يستخدم كتل لنظام الملفات حجمها %i بايت"
 msgid "Using key size of %i bits"
 msgstr "يستخدم مفتاح بطول %i بتة"
 
-msgid "Verify Encfs Password: "
-msgstr "أكد كلمة مرور EncFS: "
+msgid "Verify Encifs Password: "
+msgstr "أكد كلمة مرور EnciFS: "
 
 #, c-format
 msgid "Version 3 configuration; created by %s\n"
@@ -589,19 +589,19 @@ msgid "directory %s does not exist.\n"
 msgstr "الدليل %s غير موجود.\n"
 
 msgid ""
-"encfs [options] rootDir mountPoint -- [FUSE Mount Options]\n"
+"encifs [options] rootDir mountPoint -- [FUSE Mount Options]\n"
 "valid FUSE Mount Options follow:\n"
 msgstr ""
-"encfs [خيارات]  مجلد الجذر  نفطة الضم  -- [خيارات ضم FUSE]\n"
+"encifs [خيارات]  مجلد الجذر  نفطة الضم  -- [خيارات ضم FUSE]\n"
 "يتبع ذلك خيارات ضم FUSE صالحة:\n"
 
 #, c-format
-msgid "encfs version %s"
-msgstr "encfsالإصدارة %s"
+msgid "encifs version %s"
+msgstr "encifsالإصدارة %s"
 
 #, c-format
-msgid "encfsctl version %s"
-msgstr "encfsctl الإصدارة %s"
+msgid "encifsctl version %s"
+msgstr "encifsctl الإصدارة %s"
 
 msgid "filesystem block size: "
 msgstr "حجم كتلة نظام الملفات: "

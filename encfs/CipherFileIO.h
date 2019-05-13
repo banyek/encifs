@@ -32,7 +32,7 @@
 #include "FileUtils.h"
 #include "Interface.h"
 
-namespace encfs {
+namespace encifs {
 
 class Cipher;
 class FileIO;
@@ -92,6 +92,6 @@ class CipherFileIO : public BlockFileIO {
   CipherKey key;
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

@@ -1,7 +1,7 @@
 find_package (Gettext REQUIRED)
 
 file (GLOB POFILES *.po)
-GETTEXT_CREATE_TRANSLATIONS (encfs.pot ALL ${POFILES})
+GETTEXT_CREATE_TRANSLATIONS (encifs.pot ALL ${POFILES})
 
 find_program(XGETTEXT_CMD xgettext)
 
@@ -10,10 +10,10 @@ set(_xgettext_option_list --language=C
   --keyword=N_
   --keyword=C_:1c,2
   --keyword=NC_:1c,2 -s
-  --package-name=encfs
-  --package-version=${ENCFS_VERSION})
+  --package-name=encifs
+  --package-version=${ENCIFS_VERSION})
 
-set(_potFile encfs.pot)
+set(_potFile encifs.pot)
 file(GLOB _src_list ../**/*.cpp)
 
 if(XGETTEXT_CMD)

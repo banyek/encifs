@@ -1,13 +1,13 @@
-EncFS Performance
+EnciFS Performance
 =================
 
-EncFS runs in user-space while eCryptfs runs in the kernel.
-This is why it is often assumed that eCryptfs is faster than EncFS.
-To compare the actual performance of EncFS and eCryptfs on top of
-different backing disks, the EncFS test suite contains an automated
+EnciFS runs in user-space while eCryptfs runs in the kernel.
+This is why it is often assumed that eCryptfs is faster than EnciFS.
+To compare the actual performance of EnciFS and eCryptfs on top of
+different backing disks, the EnciFS test suite contains an automated
 performance test - [benchmark.pl](tests/benchmark.pl).
 
-performance.pl takes care of setting up EncFS and eCryptfs mounts,
+performance.pl takes care of setting up EnciFS and eCryptfs mounts,
 clearing caches and syncing disks between the tests, and also to unmount
 and clean up everything in the end.
 
@@ -22,7 +22,7 @@ It performance the following tests:
   of stat() calls.
 * delete: Recursively delete the extracted files
 
-For EncFS, the [default options](tests/benchmark.pl#L47) are used.
+For EnciFS, the [default options](tests/benchmark.pl#L47) are used.
 This means:
 
 * AES with 192 bit key
@@ -57,7 +57,7 @@ clear the caches)
 
 * HDD: Seagate Barracuda 7200.9
 
-Test            | EncFS        | eCryptfs     | EncFS advantage
+Test            | EnciFS        | eCryptfs     | EnciFS advantage
 ----------------|-------------:|-------------:|---------------:
 stream_write    |     32 MiB/s |     38 MiB/s | 0.84
 extract         |  28744 ms    |  30027 ms    | 1.04
@@ -68,7 +68,7 @@ delete          |   6462 ms    |  74652 ms    | 11.55
 
 * SSD: Samsung SSD 840 EVO 250GB
 
-Test            | EncFS        | eCryptfs     | EncFS advantage
+Test            | EnciFS        | eCryptfs     | EnciFS advantage
 ----------------|-------------:|-------------:|---------------:
 stream_write    |     53 MiB/s |     75 MiB/s | 0.71
 extract         |  26129 ms    |   9692 ms    | 0.37
@@ -78,7 +78,7 @@ delete          |   5444 ms    |   9130 ms    | 1.68
 
 * Ramdisk: tmpfs
 
-Test            | EncFS        | eCryptfs     | EncFS advantage
+Test            | EnciFS        | eCryptfs     | EnciFS advantage
 ----------------|-------------:|-------------:|---------------:
 stream_write    |     82 MiB/s |    111 MiB/s | 0.74
 extract         |  22393 ms    |   8117 ms    | 0.36
@@ -89,14 +89,14 @@ delete          |   4346 ms    |    907 ms    | 0.21
 Interpretation
 --------------
 eCryptfs uses a large per-file header (8 KB) which is a big disadvantage
-on classic HDDs. For stat()-heavy operations on HDDs, EncFS is 18x faster.
+on classic HDDs. For stat()-heavy operations on HDDs, EnciFS is 18x faster.
 
-EncFS stores small files much more efficiently, which is why it consitently
+EnciFS stores small files much more efficiently, which is why it consitently
 uses less space than eCryptfs: zero-size files take no space at all,
 other files get a 8-byte header. Because the filesystem allocates space
 in 4KB blocks, the actually used disk space must be rounded up to 4096.
 
-plaintext size | EncFS raw | EncFS du | eCryptfs raw | eCryptfs du
+plaintext size | EnciFS raw | EnciFS du | eCryptfs raw | eCryptfs du
 --------------:|----------:|---------:|-------------:|------------:
    0           |    0      |    0     |  8192        |  8192
    1           |    9      | 4096     | 12288        | 12288

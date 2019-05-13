@@ -27,7 +27,7 @@
 #include "Error.h"
 #include "NameIO.h"
 
-namespace encfs {
+namespace encifs {
 
 class Cipher;
 
@@ -79,4 +79,4 @@ int NullNameIO::decodeName(const char *encodedName, int length, uint64_t *iv,
 
 bool NullNameIO::Enabled() { return true; }
 
-}  // namespace encfs
+}  // namespace encifs

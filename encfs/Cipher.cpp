@@ -37,7 +37,7 @@
 
 using namespace std;
 
-namespace encfs {
+namespace encifs {
 
 #define REF_MODULE(TYPE) \
   if (!TYPE::Enabled()) cerr << "referenceModule: should never happen\n";
@@ -207,4 +207,4 @@ string Cipher::encodeAsString(const CipherKey &key,
   return str;
 }
 
-}  // namespace encfs
+}  // namespace encifs

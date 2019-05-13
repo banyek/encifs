@@ -47,7 +47,7 @@
 #endif
 
 using namespace std;
-using namespace encfs;
+using namespace encifs;
 
 const int FSBlockSize = 256;
 
@@ -166,7 +166,7 @@ bool runTests(const std::shared_ptr<Cipher> &cipher, bool verbose) {
     cipher->writeKey(key, keyBuf, encodingKey);
 
     // store in config struct..
-    EncFSConfig cfg;
+    EnciFSConfig cfg;
     cfg.cipherIface = cipher->interface();
     cfg.keySize = 8 * cipher->keySize();
     cfg.blockSize = FSBlockSize;
@@ -175,7 +175,7 @@ bool runTests(const std::shared_ptr<Cipher> &cipher, bool verbose) {
     // save config
     // Creation of a temporary file should be more platform independent. On
     // c++17 we could use std::filesystem.
-    string name = "/tmp/encfstestXXXXXX";
+    string name = "/tmp/encifstestXXXXXX";
     int tmpFd = mkstemp(&name[0]);
     rAssert(-1 != tmpFd);
     // mkstemp opens the temporary file, but we only need its name -> close it
@@ -186,7 +186,7 @@ bool runTests(const std::shared_ptr<Cipher> &cipher, bool verbose) {
     }
 
     // read back in and check everything..
-    EncFSConfig cfg2;
+    EnciFSConfig cfg2;
     {
       auto ok = readV6Config(name.c_str(), &cfg2, nullptr);
       rAssert(ok == true);
@@ -218,13 +218,13 @@ bool runTests(const std::shared_ptr<Cipher> &cipher, bool verbose) {
   FSConfigPtr fsCfg = FSConfigPtr(new FSConfig);
   fsCfg->cipher = cipher;
   fsCfg->key = key;
-  fsCfg->config.reset(new EncFSConfig);
+  fsCfg->config.reset(new EnciFSConfig);
   fsCfg->config->blockSize = FSBlockSize;
 
   if (verbose)
     cerr << "Testing name encode/decode (stream coding w/ IV chaining)\n";
   {
-    fsCfg->opts.reset(new EncFS_Opts);
+    fsCfg->opts.reset(new EnciFS_Opts);
     fsCfg->opts->idleTracking = false;
     fsCfg->config->uniqueIV = false;
 
@@ -387,7 +387,7 @@ static bool testCipherSize(const string &name, int keySize, int blockSize,
         cerr << "FAILED\n";
         return false;
       }
-    } catch (encfs::Error &er) {
+    } catch (encifs::Error &er) {
       cerr << "Error: " << er.what() << "\n";
       return false;
     }
@@ -397,7 +397,7 @@ static bool testCipherSize(const string &name, int keySize, int blockSize,
 
 int main(int argc, char *argv[]) {
   START_EASYLOGGINGPP(argc, argv);
-  encfs::initLogging();
+  encifs::initLogging();
 
   SSL_load_error_strings();
   SSL_library_init();

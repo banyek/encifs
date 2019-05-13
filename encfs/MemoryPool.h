@@ -21,7 +21,7 @@
 #ifndef _MemoryPool_incl_
 #define _MemoryPool_incl_
 
-namespace encfs {
+namespace encifs {
 
 struct MemBlock {
   unsigned char *data;
@@ -48,6 +48,6 @@ void release(const MemBlock &el);
 void destroyAll();
 }
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

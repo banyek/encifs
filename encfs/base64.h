@@ -24,7 +24,7 @@
 #include <string>  // for string
 #include <vector>  // for vector
 
-namespace encfs {
+namespace encifs {
 
 inline int B64ToB256Bytes(int numB64Bytes) {
   return (numB64Bytes * 6) / 8;  // round down
@@ -75,6 +75,6 @@ bool B64StandardDecode(unsigned char *out, const unsigned char *in,
 
 std::string B64StandardEncode(const std::vector<unsigned char> &input);
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

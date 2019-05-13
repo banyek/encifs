@@ -6,14 +6,14 @@ if (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} LESS 3.
   message(WARNING "You should use cmake 3.0.2 or newer for configuration to run correctly.")
 endif()
 
-project(EncFS C CXX)
+project(EnciFS C CXX)
 
-set (ENCFS_MAJOR 1)
-set (ENCFS_MINOR 9)
-set (ENCFS_PATCH 5)
-set (ENCFS_VERSION "${ENCFS_MAJOR}.${ENCFS_MINOR}.${ENCFS_PATCH}")
-set (ENCFS_SOVERSION "${ENCFS_MAJOR}.${ENCFS_MINOR}")
-set (ENCFS_NAME "Encrypted Filesystem")
+set (ENCIFS_MAJOR 1)
+set (ENCIFS_MINOR 9)
+set (ENCIFS_PATCH 5)
+set (ENCIFS_VERSION "${ENCIFS_MAJOR}.${ENCIFS_MINOR}.${ENCIFS_PATCH}")
+set (ENCIFS_SOVERSION "${ENCIFS_MAJOR}.${ENCIFS_MINOR}")
+set (ENCIFS_NAME "Encrypted Filesystem")
 
 option(IWYU "Build with IWYU analysis." OFF)
 
@@ -23,12 +23,12 @@ set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
   "${CMAKE_CURRENT_LIST_DIR}/vendor/github.com/muflihun/easyloggingpp/cmake")
 
-option (BUILD_UNIT_TESTS "build EncFS unit tests" ON)
+option (BUILD_UNIT_TESTS "build EnciFS unit tests" ON)
 option (USE_INTERNAL_TINYXML "use built-in TinyXML2" ON)
 option (USE_INTERNAL_EASYLOGGING "use built-in Easylogging++" ON)
 option (BUILD_SHARED_LIBS "build internal libraries as shared" OFF)
 option (ENABLE_NLS "compile with Native Language Support (using gettext)" ON)
-option (INSTALL_LIBENCFS "install libencfs" OFF)
+option (INSTALL_LIBENCIFS "install libencifs" OFF)
 option (LINT "enable lint output" OFF)
 
 if (NOT DEFINED LIB_INSTALL_DIR)
@@ -66,7 +66,7 @@ if (BUILD_SHARED_LIBS)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif ()
 
-add_definitions( -DPACKAGE="encfs" )
+add_definitions( -DPACKAGE="encifs" )
 
 # http://www.cmake.org/Wiki/CMake_RPATH_handling#Mac_OS_X_and_the_RPATH
 if (APPLE)
@@ -168,9 +168,9 @@ if (HAVE_SYSLOG_H)
 endif (HAVE_SYSLOG_H)
 
 # Packaging config.
-set (CPACK_PACKAGE_NAME "encfs")
-set (CPACK_PACKAGE_VERSION_MAJOR ${ENCFS_MAJOR})
-set (CPACK_PACKAGE_VERSION_MINOR ${ENCFS_MINOR})
+set (CPACK_PACKAGE_NAME "encifs")
+set (CPACK_PACKAGE_VERSION_MAJOR ${ENCIFS_MAJOR})
+set (CPACK_PACKAGE_VERSION_MINOR ${ENCIFS_MINOR})
 set (CPACK_SOURCE_GENERATOR TGZ)
 set (CPACK_SOURCE_IGNORE_FILES
   "/build/")
@@ -258,40 +258,40 @@ else ()
 endif ()
 
 set(SOURCE_FILES
-  encfs/autosprintf.cpp
-  encfs/base64.cpp
-  encfs/BlockFileIO.cpp
-  encfs/BlockNameIO.cpp
-  encfs/Cipher.cpp
-  encfs/CipherFileIO.cpp
-  encfs/CipherKey.cpp
-  encfs/ConfigReader.cpp
-  encfs/ConfigVar.cpp
-  encfs/Context.cpp
-  encfs/DirNode.cpp
-  encfs/encfs.cpp
-  encfs/Error.cpp
-  encfs/FileIO.cpp
-  encfs/FileNode.cpp
-  encfs/FileUtils.cpp
-  encfs/Interface.cpp
-  encfs/MACFileIO.cpp
-  encfs/MemoryPool.cpp
-  encfs/NameIO.cpp
-  encfs/NullCipher.cpp
-  encfs/NullNameIO.cpp
-  encfs/openssl.cpp
-  encfs/RawFileIO.cpp
-  encfs/readpassphrase.cpp
-  encfs/SSL_Cipher.cpp
-  encfs/StreamNameIO.cpp
-  encfs/XmlReader.cpp
+  encifs/autosprintf.cpp
+  encifs/base64.cpp
+  encifs/BlockFileIO.cpp
+  encifs/BlockNameIO.cpp
+  encifs/Cipher.cpp
+  encifs/CipherFileIO.cpp
+  encifs/CipherKey.cpp
+  encifs/ConfigReader.cpp
+  encifs/ConfigVar.cpp
+  encifs/Context.cpp
+  encifs/DirNode.cpp
+  encifs/encifs.cpp
+  encifs/Error.cpp
+  encifs/FileIO.cpp
+  encifs/FileNode.cpp
+  encifs/FileUtils.cpp
+  encifs/Interface.cpp
+  encifs/MACFileIO.cpp
+  encifs/MemoryPool.cpp
+  encifs/NameIO.cpp
+  encifs/NullCipher.cpp
+  encifs/NullNameIO.cpp
+  encifs/openssl.cpp
+  encifs/RawFileIO.cpp
+  encifs/readpassphrase.cpp
+  encifs/SSL_Cipher.cpp
+  encifs/StreamNameIO.cpp
+  encifs/XmlReader.cpp
 )
-add_library(encfs ${SOURCE_FILES})
-set_target_properties(encfs PROPERTIES
-  VERSION ${ENCFS_VERSION}
-  SOVERSION ${ENCFS_SOVERSION})
-target_link_libraries(encfs
+add_library(encifs ${SOURCE_FILES})
+set_target_properties(encifs PROPERTIES
+  VERSION ${ENCIFS_VERSION}
+  SOVERSION ${ENCIFS_SOVERSION})
+target_link_libraries(encifs
   ${EXTRA_LINKER_FLAGS}
   ${FUSE_LIBRARIES}
   ${OPENSSL_LIBRARIES}
@@ -301,16 +301,16 @@ target_link_libraries(encfs
   ${Intl_LIBRARIES}
   ${ATOMIC_LIBRARY}
 )
-if (INSTALL_LIBENCFS)
-  install (TARGETS encfs DESTINATION ${LIB_INSTALL_DIR})
-endif (INSTALL_LIBENCFS)
+if (INSTALL_LIBENCIFS)
+  install (TARGETS encifs DESTINATION ${LIB_INSTALL_DIR})
+endif (INSTALL_LIBENCIFS)
 
 if (IWYU)
   if (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 3.2)
     find_program(iwyu_path NAMES include-what-you-use iwyu)
     if (iwyu_path)
       message ("-- Enabled IWYU")
-      set_property(TARGET encfs PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
+      set_property(TARGET encifs PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
     endif()
   endif()
 endif()
@@ -318,27 +318,27 @@ endif()
 # Set RPATH to library install path.
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}")
 
-add_executable (encfs-bin encfs/main.cpp)
-target_link_libraries (encfs-bin encfs)
-set_target_properties (encfs-bin PROPERTIES OUTPUT_NAME "encfs")
-install (TARGETS encfs-bin DESTINATION bin)
+add_executable (encifs-bin encifs/main.cpp)
+target_link_libraries (encifs-bin encifs)
+set_target_properties (encifs-bin PROPERTIES OUTPUT_NAME "encifs")
+install (TARGETS encifs-bin DESTINATION bin)
 
 if(LINT AND CLANG_TIDY_EXE)
-  set_target_properties(encfs PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
-  set_target_properties(encfs-bin PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
+  set_target_properties(encifs PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
+  set_target_properties(encifs-bin PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
 endif()
 
-add_executable (encfsctl encfs/encfsctl.cpp)
-target_link_libraries (encfsctl encfs)
-install (TARGETS encfsctl DESTINATION bin)
+add_executable (encifsctl encifs/encifsctl.cpp)
+target_link_libraries (encifsctl encifs)
+install (TARGETS encifsctl DESTINATION bin)
 
-add_executable (makekey encfs/makeKey.cpp)
-target_link_libraries (makekey encfs)
+add_executable (makekey encifs/makeKey.cpp)
+target_link_libraries (makekey encifs)
 
-add_executable (checkops encfs/test.cpp)
-target_link_libraries (checkops encfs)
+add_executable (checkops encifs/test.cpp)
+target_link_libraries (checkops encifs)
 
-install (PROGRAMS encfs/encfssh DESTINATION bin)
+install (PROGRAMS encifs/encifssh DESTINATION bin)
 
 # Reference all headers, to make certain IDEs happy.
 file (GLOB_RECURSE all_headers ${CMAKE_CURRENT_LIST_DIR}/*.h)
@@ -350,19 +350,19 @@ if (POD2MAN)
     set (MAN_DESTINATION "man/man1")
   endif()
 
-  add_custom_target (encfs-man ALL
-    COMMAND ${POD2MAN} -u --section=1 --release=${ENCFS_VERSION} --center=${ENCFS_NAME}
-            ${CMAKE_CURRENT_LIST_DIR}/encfs/encfs.pod encfs.1)
+  add_custom_target (encifs-man ALL
+    COMMAND ${POD2MAN} -u --section=1 --release=${ENCIFS_VERSION} --center=${ENCIFS_NAME}
+            ${CMAKE_CURRENT_LIST_DIR}/encifs/encifs.pod encifs.1)
 
-  add_custom_target (encfsctl-man ALL
-    COMMAND ${POD2MAN} -u --section=1 --release=${ENCFS_VERSION} --center=${ENCFS_NAME}
-            ${CMAKE_CURRENT_LIST_DIR}/encfs/encfsctl.pod encfsctl.1)
+  add_custom_target (encifsctl-man ALL
+    COMMAND ${POD2MAN} -u --section=1 --release=${ENCIFS_VERSION} --center=${ENCIFS_NAME}
+            ${CMAKE_CURRENT_LIST_DIR}/encifs/encifsctl.pod encifsctl.1)
 
-  add_custom_target (encfssh-man ALL
-    COMMAND ${POD2MAN} -u --section=1 --release=${ENCFS_VERSION} --center=${ENCFS_NAME}
-            ${CMAKE_CURRENT_LIST_DIR}/encfs/encfssh.pod encfssh.1)
+  add_custom_target (encifssh-man ALL
+    COMMAND ${POD2MAN} -u --section=1 --release=${ENCIFS_VERSION} --center=${ENCIFS_NAME}
+            ${CMAKE_CURRENT_LIST_DIR}/encifs/encifssh.pod encifssh.1)
 
-  install (FILES ${CMAKE_BINARY_DIR}/encfs.1 ${CMAKE_BINARY_DIR}/encfsctl.1 ${CMAKE_BINARY_DIR}/encfssh.1
+  install (FILES ${CMAKE_BINARY_DIR}/encifs.1 ${CMAKE_BINARY_DIR}/encifsctl.1 ${CMAKE_BINARY_DIR}/encifssh.1
     DESTINATION ${MAN_DESTINATION})
 endif (POD2MAN)
 
@@ -381,6 +381,6 @@ if (BUILD_UNIT_TESTS)
   # Unit tests.
   add_subdirectory(test EXCLUDE_FROM_ALL)
 
-  # Integration test target - runs against built encfs.
+  # Integration test target - runs against built encifs.
   add_custom_target(integration COMMAND ${CMAKE_CURRENT_LIST_DIR}/integration.sh)
 endif ()

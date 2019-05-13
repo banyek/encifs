@@ -33,7 +33,7 @@
 #include "easylogging++.h"
 #include "intl/gettext.h"
 
-namespace encfs {
+namespace encifs {
 
 static std::shared_ptr<NameIO> NewBlockNameIO(
     const Interface &iface, const std::shared_ptr<Cipher> &cipher,
@@ -263,4 +263,4 @@ int BlockNameIO::decodeName(const char *encodedName, int length, uint64_t *iv,
 
 bool BlockNameIO::Enabled() { return true; }
 
-}  // namespace encfs
+}  // namespace encifs

@@ -27,7 +27,7 @@
 #include "FileIO.h"
 #include "Interface.h"
 
-namespace encfs {
+namespace encifs {
 
 class RawFileIO : public FileIO {
  public:
@@ -63,6 +63,6 @@ class RawFileIO : public FileIO {
   bool canWrite;
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

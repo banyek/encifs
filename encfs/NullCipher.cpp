@@ -29,7 +29,7 @@
 
 using namespace std;
 
-namespace encfs {
+namespace encifs {
 
 static Interface NullInterface("nullCipher", 1, 0, 0);
 static Range NullKeyRange(0);
@@ -154,4 +154,4 @@ bool NullCipher::blockDecode(unsigned char *, int, uint64_t,
 
 bool NullCipher::Enabled() { return true; }
 
-}  // namespace encfs
+}  // namespace encifs

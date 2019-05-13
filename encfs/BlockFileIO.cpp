@@ -25,10 +25,10 @@
 #include "Error.h"
 #include "FSConfig.h"    // for FSConfigPtr
 #include "FileIO.h"      // for IORequest, FileIO
-#include "FileUtils.h"   // for EncFS_Opts
+#include "FileUtils.h"   // for EnciFS_Opts
 #include "MemoryPool.h"  // for MemBlock, release, allocation
 
-namespace encfs {
+namespace encifs {
 
 template <typename Type>
 inline Type min(Type A, Type B) {
@@ -476,4 +476,4 @@ int BlockFileIO::truncateBase(off_t size, FileIO *base) {
   return res;
 }
 
-}  // namespace encfs
+}  // namespace encifs

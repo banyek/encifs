@@ -27,9 +27,9 @@
 
 #include "CipherKey.h"
 #include "Interface.h"
-#include "encfs.h"
+#include "encifs.h"
 
-namespace encfs {
+namespace encifs {
 
 enum ConfigType {
   Config_None = 0,
@@ -40,14 +40,14 @@ enum ConfigType {
   Config_V6
 };
 
-struct EncFS_Opts;
+struct EnciFS_Opts;
 class Cipher;
 class NameIO;
 
 /**
- * Persistent configuration (stored in config file .encfs6.xml)
+ * Persistent configuration (stored in config file .encifs6.xml)
  */
-struct EncFSConfig {
+struct EnciFSConfig {
   ConfigType cfgType;
 
   std::string creator;
@@ -78,7 +78,7 @@ struct EncFSConfig {
   bool chainedNameIV;  // filename IV chaining
   bool allowHoles;     // allow holes in files (implicit zero blocks)
 
-  EncFSConfig() : keyData(), salt() {
+  EnciFSConfig() : keyData(), salt() {
     cfgType = Config_None;
     subVersion = 0;
     plainData = false;
@@ -113,12 +113,12 @@ struct EncFSConfig {
 };
 
 // helpers for serializing to/from a stream
-std::ostream &operator<<(std::ostream &os, const EncFSConfig &cfg);
-std::istream &operator>>(std::istream &os, EncFSConfig &cfg);
+std::ostream &operator<<(std::ostream &os, const EnciFSConfig &cfg);
+std::istream &operator>>(std::istream &os, EnciFSConfig &cfg);
 
 struct FSConfig {
-  std::shared_ptr<EncFSConfig> config;
-  std::shared_ptr<EncFS_Opts> opts;
+  std::shared_ptr<EnciFSConfig> config;
+  std::shared_ptr<EnciFS_Opts> opts;
 
   std::shared_ptr<Cipher> cipher;
   CipherKey key;
@@ -135,6 +135,6 @@ struct FSConfig {
 
 using FSConfigPtr = std::shared_ptr<FSConfig>;
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

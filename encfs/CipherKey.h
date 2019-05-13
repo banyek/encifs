@@ -23,7 +23,7 @@
 
 #include <memory>
 
-namespace encfs {
+namespace encifs {
 
 class AbstractCipherKey {
  public:
@@ -33,6 +33,6 @@ class AbstractCipherKey {
 
 using CipherKey = std::shared_ptr<AbstractCipherKey>;
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

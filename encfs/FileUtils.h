@@ -28,9 +28,9 @@
 #include "CipherKey.h"
 #include "FSConfig.h"
 #include "Interface.h"
-#include "encfs.h"
+#include "encifs.h"
 
-namespace encfs {
+namespace encifs {
 
 // true if the path points to an existing node (of any type)
 bool fileExists(const char *fileName);
@@ -51,25 +51,25 @@ bool userAllowMkdir(int promptno, const char *dirPath, mode_t mode);
 class Cipher;
 class DirNode;
 
-struct EncFS_Root {
+struct EnciFS_Root {
   std::shared_ptr<Cipher> cipher;
   CipherKey volumeKey;
   std::shared_ptr<DirNode> root;
 
-  EncFS_Root();
-  ~EncFS_Root();
+  EnciFS_Root();
+  ~EnciFS_Root();
 };
 
-using RootPtr = std::shared_ptr<EncFS_Root>;
+using RootPtr = std::shared_ptr<EnciFS_Root>;
 
 enum ConfigMode { Config_Prompt, Config_Standard, Config_Paranoia };
 
 /**
- * EncFS_Opts stores internal settings
+ * EnciFS_Opts stores internal settings
  *
- * See struct EncFS_Args (main.cpp) for the parsed command line arguments
+ * See struct EnciFS_Args (main.cpp) for the parsed command line arguments
  */
-struct EncFS_Opts {
+struct EnciFS_Opts {
   std::string rootDir;
   std::string mountPoint;  // where to make filesystem visible
   std::string unmountPoint;// same as mountPoint, but as given by the user
@@ -91,9 +91,9 @@ struct EncFS_Opts {
 
   bool reverseEncryption;  // Reverse encryption
 
-  bool noCache; /* Disable block cache (in EncFS) and stat cache (in kernel).
+  bool noCache; /* Disable block cache (in EnciFS) and stat cache (in kernel).
                  * This is needed if the backing files may be modified
-                 * behind the back of EncFS (for example, in reverse mode).
+                 * behind the back of EnciFS (for example, in reverse mode).
                  * See main.cpp for a longer explaination. */
 
   bool readOnly;  // Mount read-only
@@ -105,7 +105,7 @@ struct EncFS_Opts {
   ConfigMode configMode;
   std::string config;  // path to configuration file (or empty)
 
-  EncFS_Opts() {
+  EnciFS_Opts() {
     createIfNotFound = true;
     idleTracking = false;
     mountOnDemand = false;
@@ -128,38 +128,38 @@ struct EncFS_Opts {
 /*
     Read existing config file.  Looks for any supported configuration version.
 */
-ConfigType readConfig(const std::string &rootDir, EncFSConfig *config, const std::string &cmdConfig);
+ConfigType readConfig(const std::string &rootDir, EnciFSConfig *config, const std::string &cmdConfig);
 
 /*
     Save the configuration.  Saves back as the same configuration type as was
     read from.
 */
 bool saveConfig(ConfigType type, const std::string &rootdir,
-                const EncFSConfig *config, const std::string &cmdConfig);
+                const EnciFSConfig *config, const std::string &cmdConfig);
 
-class EncFS_Context;
+class EnciFS_Context;
 
-RootPtr initFS(EncFS_Context *ctx, const std::shared_ptr<EncFS_Opts> &opts);
+RootPtr initFS(EnciFS_Context *ctx, const std::shared_ptr<EnciFS_Opts> &opts);
 
 void unmountFS(const char *mountPoint);
 
-RootPtr createV6Config(EncFS_Context *ctx,
-                       const std::shared_ptr<EncFS_Opts> &opts);
+RootPtr createV6Config(EnciFS_Context *ctx,
+                       const std::shared_ptr<EnciFS_Opts> &opts);
 
-void showFSInfo(const EncFSConfig *config);
+void showFSInfo(const EnciFSConfig *config);
 
-bool readV4Config(const char *configFile, EncFSConfig *config,
+bool readV4Config(const char *configFile, EnciFSConfig *config,
                   struct ConfigInfo *);
-bool writeV4Config(const char *configFile, const EncFSConfig *config);
+bool writeV4Config(const char *configFile, const EnciFSConfig *config);
 
-bool readV5Config(const char *configFile, EncFSConfig *config,
+bool readV5Config(const char *configFile, EnciFSConfig *config,
                   struct ConfigInfo *);
-bool writeV5Config(const char *configFile, const EncFSConfig *config);
+bool writeV5Config(const char *configFile, const EnciFSConfig *config);
 
-bool readV6Config(const char *configFile, EncFSConfig *config,
+bool readV6Config(const char *configFile, EnciFSConfig *config,
                   struct ConfigInfo *);
-bool writeV6Config(const char *configFile, const EncFSConfig *config);
+bool writeV6Config(const char *configFile, const EnciFSConfig *config);
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

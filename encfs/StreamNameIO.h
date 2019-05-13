@@ -28,7 +28,7 @@
 #include "Interface.h"
 #include "NameIO.h"
 
-namespace encfs {
+namespace encifs {
 
 class Cipher;
 
@@ -60,6 +60,6 @@ class StreamNameIO : public NameIO {
   CipherKey _key;
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

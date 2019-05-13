@@ -1,14 +1,14 @@
 #include "gtest/gtest.h"
 
-#include "encfs/BlockNameIO.h"
-#include "encfs/Cipher.h"
-#include "encfs/CipherKey.h"
-#include "encfs/DirNode.h"
-#include "encfs/FSConfig.h"
-#include "encfs/FileUtils.h"
-#include "encfs/StreamNameIO.h"
+#include "encifs/BlockNameIO.h"
+#include "encifs/Cipher.h"
+#include "encifs/CipherKey.h"
+#include "encifs/DirNode.h"
+#include "encifs/FSConfig.h"
+#include "encifs/FileUtils.h"
+#include "encifs/StreamNameIO.h"
 
-using namespace encfs;
+using namespace encifs;
 using namespace testing;
 using std::string;
 
@@ -67,9 +67,9 @@ TEST_P(CipherTest, NameStreamEncoding) {
   FSConfigPtr fsCfg = FSConfigPtr(new FSConfig);
   fsCfg->cipher = cipher;
   fsCfg->key = key;
-  fsCfg->config.reset(new EncFSConfig);
+  fsCfg->config.reset(new EnciFSConfig);
   fsCfg->config->blockSize = FSBlockSize;
-  fsCfg->opts.reset(new EncFS_Opts);
+  fsCfg->opts.reset(new EnciFS_Opts);
   fsCfg->opts->idleTracking = false;
   fsCfg->config->uniqueIV = false;
 
@@ -94,9 +94,9 @@ TEST_P(CipherTest, NameBlockEncoding) {
   FSConfigPtr fsCfg = FSConfigPtr(new FSConfig);
   fsCfg->cipher = cipher;
   fsCfg->key = key;
-  fsCfg->config.reset(new EncFSConfig);
+  fsCfg->config.reset(new EnciFSConfig);
   fsCfg->config->blockSize = FSBlockSize;
-  fsCfg->opts.reset(new EncFS_Opts);
+  fsCfg->opts.reset(new EnciFS_Opts);
   fsCfg->opts->idleTracking = false;
   fsCfg->config->uniqueIV = false;
   fsCfg->nameCoding.reset(new BlockNameIO(
@@ -120,9 +120,9 @@ TEST_P(CipherTest, NameBlockBase32Encoding) {
   FSConfigPtr fsCfg = FSConfigPtr(new FSConfig);
   fsCfg->cipher = cipher;
   fsCfg->key = key;
-  fsCfg->config.reset(new EncFSConfig);
+  fsCfg->config.reset(new EnciFSConfig);
   fsCfg->config->blockSize = FSBlockSize;
-  fsCfg->opts.reset(new EncFS_Opts);
+  fsCfg->opts.reset(new EnciFS_Opts);
   fsCfg->opts->idleTracking = false;
   fsCfg->config->uniqueIV = false;
   fsCfg->nameCoding.reset(new BlockNameIO(BlockNameIO::CurrentInterface(),
@@ -151,7 +151,7 @@ TEST_P(CipherTest, ConfigLoadStore) {
   cipher->writeKey(key, keyBuf, encodingKey);
 
   // store in config struct..
-  EncFSConfig cfg;
+  EnciFSConfig cfg;
   cfg.cipherIface = cipher->interface();
   cfg.keySize = 8 * cipher->keySize();
   cfg.blockSize = FSBlockSize;
@@ -160,7 +160,7 @@ TEST_P(CipherTest, ConfigLoadStore) {
   // save config
   // Creation of a temporary file should be more platform independent. On
   // c++17 we could use std::filesystem.
-  std::string name = "/tmp/encfstestXXXXXX";
+  std::string name = "/tmp/encifstestXXXXXX";
   int tmpFd = mkstemp(&name[0]);
   EXPECT_GE(tmpFd, 0);
   // mkstemp opens the temporary file, but we only need its name -> close it
@@ -171,7 +171,7 @@ TEST_P(CipherTest, ConfigLoadStore) {
   }
 
   // read back in and check everything..
-  EncFSConfig cfg2;
+  EnciFSConfig cfg2;
   {
     auto ok = readV6Config(name.c_str(), &cfg2, nullptr);
     EXPECT_TRUE(ok);

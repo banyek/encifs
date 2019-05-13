@@ -26,7 +26,7 @@
 #include "FSConfig.h"
 #include "FileIO.h"
 
-namespace encfs {
+namespace encifs {
 
 /*
     Implements block scatter / gather interface.  Requires derived classes to
@@ -67,6 +67,6 @@ class BlockFileIO : public FileIO {
   mutable IORequest _cache;
 };
 
-}  // namespace encfs
+}  // namespace encifs
 
 #endif

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Test EncFS --reverse mode
+# Test EnciFS --reverse mode
 
 use warnings;
 use Test::More tests => 46;
@@ -34,7 +34,7 @@ if(system("which lsextattr > /dev/null 2>&1") == 0)
 }
 # Do we support xattr ?
 my $have_xattr = 1;
-if(system("./build/encfs --verbose --version 2>&1 | grep -q HAVE_XATTR") != 0)
+if(system("./build/encifs --verbose --version 2>&1 | grep -q HAVE_XATTR") != 0)
 {
     $have_xattr = 0;
 }
@@ -43,7 +43,7 @@ if(system("./build/encfs --verbose --version 2>&1 | grep -q HAVE_XATTR") != 0)
 # Create a new empty working directory
 sub newWorkingDir
 {
-    our $workingDir = mkdtemp("$tempDir/encfs-reverse-tests-XXXX")
+    our $workingDir = mkdtemp("$tempDir/encifs-reverse-tests-XXXX")
         || BAIL_OUT("Could not create temporary directory");
 
     our $plain = "$workingDir/plain";
@@ -85,13 +85,13 @@ sub cleanup
 # Directory structure: plain -[encrypt]-> ciphertext -[decrypt]-> decrypted
 sub mount
 {
-    delete $ENV{"ENCFS6_CONFIG"};
-    system("./build/encfs --extpass=\"echo test\" --standard $plain $ciphertext --reverse --nocache");
-    ok(waitForFile("$plain/.encfs6.xml"), "plain .encfs6.xml exists") or BAIL_OUT("'$plain/.encfs6.xml'");
-    my $e = encName(".encfs6.xml");
-    ok(waitForFile("$ciphertext/$e"), "encrypted .encfs6.xml exists") or BAIL_OUT("'$ciphertext/$e'");
-    system("ENCFS6_CONFIG=$plain/.encfs6.xml ./build/encfs --noattrcache --nodatacache --extpass=\"echo test\" $ciphertext $decrypted");
-    ok(waitForFile("$decrypted/.encfs6.xml"), "decrypted .encfs6.xml exists") or BAIL_OUT("'$decrypted/.encfs6.xml'");
+    delete $ENV{"ENCIFS6_CONFIG"};
+    system("./build/encifs --extpass=\"echo test\" --standard $plain $ciphertext --reverse --nocache");
+    ok(waitForFile("$plain/.encifs6.xml"), "plain .encifs6.xml exists") or BAIL_OUT("'$plain/.encifs6.xml'");
+    my $e = encName(".encifs6.xml");
+    ok(waitForFile("$ciphertext/$e"), "encrypted .encifs6.xml exists") or BAIL_OUT("'$ciphertext/$e'");
+    system("ENCIFS6_CONFIG=$plain/.encifs6.xml ./build/encifs --noattrcache --nodatacache --extpass=\"echo test\" $ciphertext $decrypted");
+    ok(waitForFile("$decrypted/.encifs6.xml"), "decrypted .encifs6.xml exists") or BAIL_OUT("'$decrypted/.encifs6.xml'");
 }
 
 # Helper function
@@ -100,39 +100,39 @@ sub mount
 sub encName
 {
 	my $name = shift;
-	my $enc = qx(ENCFS6_CONFIG=$plain/.encfs6.xml ./build/encfsctl encode --extpass="echo test" $ciphertext $name);
+	my $enc = qx(ENCIFS6_CONFIG=$plain/.encifs6.xml ./build/encifsctl encode --extpass="echo test" $ciphertext $name);
 	chomp($enc);
 	return $enc;
 }
 
-# Copy a directory tree and verify that the decrypted data is identical, we also create a foo/.encfs6.xml file, to be sure it correctly shows-up
+# Copy a directory tree and verify that the decrypted data is identical, we also create a foo/.encifs6.xml file, to be sure it correctly shows-up
 sub copy_test
 {
-    # first be sure .encfs6.xml does not show up
-    # We does not use -f for this test, as it would succeed, .encfs6.xml is only hidden from readdir.
-    my $f = encName(".encfs6.xml");
+    # first be sure .encifs6.xml does not show up
+    # We does not use -f for this test, as it would succeed, .encifs6.xml is only hidden from readdir.
+    my $f = encName(".encifs6.xml");
     cmp_ok( length($f), '>', 8, "encrypted name ok" );
-    ok(system("ls -1 $ciphertext | grep -qwF -- $f") != 0, "configuration file .encfs6.xml not visible in $ciphertext");
+    ok(system("ls -1 $ciphertext | grep -qwF -- $f") != 0, "configuration file .encifs6.xml not visible in $ciphertext");
     # copy test
-    ok(system("cp -a encfs $plain && mkdir $plain/foo && touch $plain/foo/.encfs6.xml")==0, "copying files to plain");
-    ok(system("diff -r -q --exclude='.encfs6.xml' $plain $decrypted")==0, "decrypted files are identical");
-    ok(-f "$plain/encfs/encfs.cpp", "file exists");
-    unlink("$plain/encfs/encfs.cpp");
-    ok(! -f "$decrypted/encfs.cpp", "file deleted");
+    ok(system("cp -a encifs $plain && mkdir $plain/foo && touch $plain/foo/.encifs6.xml")==0, "copying files to plain");
+    ok(system("diff -r -q --exclude='.encifs6.xml' $plain $decrypted")==0, "decrypted files are identical");
+    ok(-f "$plain/encifs/encifs.cpp", "file exists");
+    unlink("$plain/encifs/encifs.cpp");
+    ok(! -f "$decrypted/encifs.cpp", "file deleted");
 }
 
-# Encfsctl cat test
-sub encfsctl_cat_test
+# Encifsctl cat test
+sub encifsctl_cat_test
 {
     my $contents = "hello world\n";
-    ok(open(OUT, "> $plain/hello.txt"), "create file for encfsctl cat test");
+    ok(open(OUT, "> $plain/hello.txt"), "create file for encifsctl cat test");
     print OUT $contents;
     close OUT;
-    qx(ENCFS6_CONFIG=$plain/.encfs6.xml ./build/encfsctl cat --extpass="echo test" $ciphertext hello.txt > $plain/hellodec.txt);
-    qx(ENCFS6_CONFIG=$plain/.encfs6.xml ./build/encfsctl cat --extpass="echo test" --reverse $plain hello.txt > $plain/helloenc.txt);
+    qx(ENCIFS6_CONFIG=$plain/.encifs6.xml ./build/encifsctl cat --extpass="echo test" $ciphertext hello.txt > $plain/hellodec.txt);
+    qx(ENCIFS6_CONFIG=$plain/.encifs6.xml ./build/encifsctl cat --extpass="echo test" --reverse $plain hello.txt > $plain/helloenc.txt);
     my $cname = encName("hello.txt");
-    ok(system("diff -q $plain/helloenc.txt $ciphertext/$cname")==0, "encfsctl correctly encrypts");
-    ok(system("diff -q $plain/hello.txt $plain/hellodec.txt")==0, "encfsctl correctly decrypts");
+    ok(system("diff -q $plain/helloenc.txt $ciphertext/$cname")==0, "encifsctl correctly encrypts");
+    ok(system("diff -q $plain/hello.txt $plain/hellodec.txt")==0, "encifsctl correctly decrypts");
 }
 
 # Create symlinks and verify they are correctly decrypted
@@ -241,7 +241,7 @@ mount();
 grow();
 largeRead();
 copy_test();
-encfsctl_cat_test();
+encifsctl_cat_test();
 symlink_test("/"); # absolute
 symlink_test("foo"); # relative
 symlink_test("/1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/15/17/18"); # long
